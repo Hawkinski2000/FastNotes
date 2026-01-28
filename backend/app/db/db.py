@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from typing import Generator
+
 from app.core.config import settings
 
 
@@ -15,7 +16,13 @@ DATABASE_URL = (
 
 engine = create_engine(DATABASE_URL, echo=False, future=True)
 
-SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, expire_on_commit=False, future=True)
+SessionLocal = sessionmaker(
+    bind=engine,
+    autocommit=False,
+    autoflush=False,
+    expire_on_commit=False,
+    future=True
+)
 
 def get_db() -> Generator[Session, None, None]:
     with SessionLocal() as session:

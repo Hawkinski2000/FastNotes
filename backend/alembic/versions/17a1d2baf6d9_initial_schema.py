@@ -1,8 +1,8 @@
 """initial schema
 
-Revision ID: cf7a7c294c56
+Revision ID: 17a1d2baf6d9
 Revises: 
-Create Date: 2026-01-28 00:42:24.803779
+Create Date: 2026-01-28 03:31:19.213868
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'cf7a7c294c56'
+revision: str = '17a1d2baf6d9'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -20,13 +20,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    op.create_table('note',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(), nullable=True),
-    sa.Column('content', sa.String(), nullable=False),
-    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
@@ -39,6 +32,15 @@ def upgrade() -> None:
     sa.UniqueConstraint('email')
     )
     op.create_index(op.f('ix_user_google_sub'), 'user', ['google_sub'], unique=True)
+    op.create_table('note',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(), nullable=True),
+    sa.Column('content', sa.String(), nullable=True),
+    sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('refresh_token',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
@@ -54,6 +56,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     op.drop_table('refresh_token')
+    op.drop_table('note')
     op.drop_index(op.f('ix_user_google_sub'), table_name='user')
     op.drop_table('user')
-    op.drop_table('note')

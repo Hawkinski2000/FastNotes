@@ -11,7 +11,6 @@ class Settings(BaseSettings):
     algorithm: str
     access_token_expire_minutes: int
     recaptcha_secret_key: str
-    google_client_id: str
     postgres_password: str
     postgres_db: str
 
