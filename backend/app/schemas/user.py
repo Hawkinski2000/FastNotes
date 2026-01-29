@@ -15,7 +15,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    settings: Optional[dict] = None
+    settings: dict
 
     model_config = ConfigDict(extra="forbid")
 

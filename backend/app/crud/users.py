@@ -9,19 +9,19 @@ from app.schemas import user
 
 
 def create_user(user: user.UserCreate, db: Session):
-    # if not user.recaptcha_token:
-    #     raise HTTPException(status_code=400, detail="Missing reCAPTCHA token")
+    if not user.recaptcha_token:
+        raise HTTPException(status_code=400, detail="Missing reCAPTCHA token")
     
-    # resp = requests.post(
-    #     "https://www.google.com/recaptcha/api/siteverify",
-    #     data={
-    #         "secret": settings.recaptcha_secret_key,
-    #         "response": user.recaptcha_token
-    #     }
-    # )
-    # result = resp.json()
-    # if not result.get("success"):
-    #     raise HTTPException(status_code=400, detail="Invalid reCAPTCHA token")
+    resp = requests.post(
+        "https://www.google.com/recaptcha/api/siteverify",
+        data={
+            "secret": settings.recaptcha_secret_key,
+            "response": user.recaptcha_token
+        }
+    )
+    result = resp.json()
+    if not result.get("success"):
+        raise HTTPException(status_code=400, detail="Invalid reCAPTCHA token")
 
     existing_user_username = (
         db.query(User)
@@ -85,7 +85,7 @@ def get_user(id: int, user_id: int, db: Session):
 
 
 def update_user(id: int, user: user.UserCreate, user_id: int, db: Session):
-    user_query = db.query(User).filter(User.id == user_id)
+    user_query = db.query(User).filter(User.id == id, User.id == user_id)
 
     if not user_query.first():
         raise HTTPException(
