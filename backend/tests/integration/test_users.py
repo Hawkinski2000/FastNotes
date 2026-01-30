@@ -18,12 +18,12 @@ from app.db.models import User
         )
     ]
 )
-def test_create_user(client, data, mock_recaptcha, status_code):
+def test_create_user(client, mock_recaptcha, data, status_code):
     res = client.post("/api/users", json=data)
     assert res.status_code == status_code
-    res_data = UserResponse(**res.json())
-    assert data["username"] == res_data.username
-    assert data["email"] == res_data.email
+    new_user = UserResponse(**res.json())
+    assert data["username"] == new_user.username
+    assert data["email"] == new_user.email
     assert "password" not in res.json()
 
 
@@ -48,7 +48,7 @@ def test_create_user(client, data, mock_recaptcha, status_code):
         )
     ]
 )
-def test_create_user_invalid(client, data, mock_recaptcha, status_code):
+def test_create_user_invalid(client, mock_recaptcha, data, status_code):
     res = client.post("/api/users", json=data)
     assert res.status_code == status_code
 
@@ -79,8 +79,8 @@ def test_create_user_invalid(client, data, mock_recaptcha, status_code):
 def test_create_user_duplicate(
     client,
     user,
-    data,
     mock_recaptcha,
+    data,
     status_code
 ):
     res = client.post("/api/users", json=data)
@@ -114,8 +114,8 @@ def test_create_user_duplicate(
 def test_check_username(client, user, data, response, status_code):
     res = client.get("/api/users/check-username", params=data)
     assert res.status_code == status_code
-    res_data = CheckResponse(**res.json())
-    assert response == res_data.model_dump()
+    check_response = CheckResponse(**res.json())
+    assert response == check_response.model_dump()
 
 
 @pytest.mark.parametrize(
@@ -164,8 +164,8 @@ def test_check_username_invalid(client, user, data, response, status_code):
 def test_check_email(client, user, data, response, status_code):
     res = client.get("/api/users/check-email", params=data)
     assert res.status_code == status_code
-    res_data = CheckResponse(**res.json())
-    assert response == res_data.model_dump()
+    check_response = CheckResponse(**res.json())
+    assert response == check_response.model_dump()
 
 
 @pytest.mark.parametrize(
@@ -226,8 +226,8 @@ def test_get_user_not_found(authorized_client, session):
 def test_update_user(authorized_client, user, data, status_code):
     res = authorized_client.patch(f"/api/users/{user["id"]}", json=data)
     assert res.status_code == status_code
-    res_data = UserResponse(**res.json())
-    assert data["settings"] == res_data.settings
+    updated_user = UserResponse(**res.json())
+    assert data["settings"] == updated_user.settings
 
 
 @pytest.mark.parametrize(
