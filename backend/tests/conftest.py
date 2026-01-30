@@ -63,7 +63,10 @@ def client(session):
 
     app.dependency_overrides[get_db] = override_get_db
 
-    yield TestClient(app)
+    try:
+        yield TestClient(app)
+    finally:
+        app.dependency_overrides.clear()
 
 
 @pytest.fixture
@@ -116,3 +119,23 @@ def token(user):
 def authorized_client(client, token):
     client.headers = {"Authorization": f"Bearer {token}"}
     return client
+
+
+@pytest.fixture
+def google_user(session):
+    user = models.User(
+        username="email@gmail.com",
+        email="email@gmail.com",
+        google_sub="sub"
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+@pytest.fixture
+def mock_verify_google_access_token():
+    with patch("app.core.oauth2.verify_google_access_token") as mock_verify:
+        mock_verify.return_value = {"sub": "sub", "email": "email@gmail.com"}
+        yield mock_verify

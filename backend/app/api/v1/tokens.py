@@ -145,7 +145,10 @@ def refresh_token(
         or db_token.revoked
         or db_token.expires_at < datetime.now(timezone.utc)
     ):
-        raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired refresh token"
+        )
 
     db_token.revoked = True
 
