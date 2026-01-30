@@ -10,8 +10,8 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password: Optional[str] = None
-    recaptcha_token: Optional[str] = None
+    password: str
+    recaptcha_token: str
 
 
 class UserUpdate(BaseModel):

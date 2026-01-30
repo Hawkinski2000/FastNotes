@@ -85,20 +85,14 @@ def create_token_google(
     idinfo = oauth2.verify_google_access_token(payload.access_token)
 
     google_sub = idinfo["sub"]
-    email = idinfo.get("email")
-    first_name = idinfo.get("given_name")
+    email = idinfo["email"]
 
     user_exists = False
 
     user = db.query(User).filter(User.google_sub == google_sub).first()
 
     if not user:
-        user = User(
-            username=email,
-            email=email,
-            first_name=first_name,
-            google_sub=google_sub,
-        )
+        user = User(username=email, email=email, google_sub=google_sub)
         db.add(user)
         db.commit()
         db.refresh(user)
