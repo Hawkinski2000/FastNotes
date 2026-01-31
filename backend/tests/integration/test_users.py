@@ -1,7 +1,7 @@
 import pytest
 
-from app.schemas.user import CheckResponse, UserResponse
 from app.db.models import User
+from app.schemas.user import CheckResponse, UserResponse
 
 
 @pytest.mark.parametrize(
@@ -43,8 +43,24 @@ def test_create_user(client, mock_recaptcha, data, status_code):
                 "username": "username",
                 "password": "password",
                 "recaptcha_token": "recaptcha_token"
-          },
-          422
+            },
+            422
+        ),
+        (
+            {
+                "username": "username",
+                "email": "email@gmail.com",
+                "recaptcha_token": "recaptcha_token"
+            },
+            422
+        ),
+        (
+            {
+                "username": "username",
+                "email": "email@gmail.com",
+                "password": "password",
+            },
+            422
         )
     ]
 )
@@ -246,62 +262,27 @@ def test_update_user_invalid(authorized_client, user, data, status_code):
     assert res.status_code == status_code
 
 
-@pytest.mark.parametrize(
-    "data, status_code",
-    [
-        (
-            {
-                "settings": {}
-            },
-            401
-        )
-    ]
-)
-def test_update_user_unauthorized(client, user, data, status_code):
-    res = client.patch(f"/api/users/{user["id"]}", json=data)
-    assert res.status_code == status_code
+def test_update_user_unauthorized(client, user):
+    res = client.patch(f"/api/users/{user["id"]}", json={"settings": {}})
+    assert res.status_code == 401
 
 
-@pytest.mark.parametrize(
-    "data, status_code",
-    [
-        (
-            {
-                "settings": {}
-            },
-            404
-        )
-    ]
-)
-def test_update_user_not_owner(
-    authorized_client,
-    another_user,
-    data,
-    status_code
-):
+def test_update_user_not_owner(authorized_client, another_user):
     res = authorized_client.patch(
         f"/api/users/{another_user["id"]}",
-        json=data
+        json={"settings": {}}
     )
-    assert res.status_code == status_code
+    assert res.status_code == 404
 
 
-@pytest.mark.parametrize(
-    "data, status_code",
-    [
-        (
-            {
-                "settings": {}
-            },
-            404
-        )
-    ]
-)
-def test_update_user_not_found(authorized_client, session, data, status_code):
+def test_update_user_not_found(authorized_client, session):
     max_id = session.query(User.id).order_by(User.id.desc()).first()[0]
     non_existent_id = max_id + 1
-    res = authorized_client.patch(f"/api/users/{non_existent_id}", json=data)
-    assert res.status_code == status_code
+    res = authorized_client.patch(
+        f"/api/users/{non_existent_id}",
+        json={"settings": {}}
+    )
+    assert res.status_code == 404
 
 # ----------------------------------------------------------------------------
 

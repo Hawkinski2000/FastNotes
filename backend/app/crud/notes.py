@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.schemas import note
@@ -24,6 +25,13 @@ def get_notes(user_id: int, db: Session):
 
 def update_note(id: int, note: note.NoteCreate, user_id: int, db: Session):
     note_query = db.query(Note).filter(Note.id == id, Note.user_id == user_id)
+
+    if not note_query.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+
     note_query.update(
         note.model_dump(exclude_unset=True),
         synchronize_session=False
@@ -39,6 +47,12 @@ def delete_note(id: int, user_id: int, db: Session):
         .filter(Note.id == id, Note.user_id == user_id)
         .first()
     )
-    if note:
-        db.delete(note)
-        db.commit()
+
+    if not note:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+
+    db.delete(note)
+    db.commit()
