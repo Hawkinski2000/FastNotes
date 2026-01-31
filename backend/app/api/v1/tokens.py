@@ -193,10 +193,10 @@ def revoke_token(
         .first()
     )
 
-    if db_token:
+    if db_token and not db_token.revoked:
         db_token.revoked = True
         db.commit()
 
-    response.delete_cookie(key="refresh_token", path="/api/tokens")
+    response.delete_cookie(key="refresh_token", path="/")
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)

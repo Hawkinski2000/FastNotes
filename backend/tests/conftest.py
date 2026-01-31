@@ -167,10 +167,4 @@ def expired_refresh_token(session, client, user):
     session.add(new_refresh_token)
     session.commit()
 
-    res = client.post(
-        "/api/tokens",
-        data={"username": user["email"], "password": user["password"]}
-    )
-    assert res.status_code == 201
-
-    return res.cookies.get("refresh_token")
+    return raw_token

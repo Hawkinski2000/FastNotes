@@ -29,6 +29,7 @@ def test_create_token(client, user, another_user, data, status_code):
     assert new_token.access_token
     assert len(new_token.access_token.split(".")) == 3
     assert new_token.token_type == "bearer"
+    assert res.cookies.get("refresh_token")
 
 
 @pytest.mark.parametrize(
@@ -119,6 +120,7 @@ def test_create_token_google_new_user(
     assert len(new_token.access_token.split(".")) == 3
     assert new_token.token_type == "bearer"
     assert new_token.user_exists == False
+    assert res.cookies.get("refresh_token")
 
 
 @pytest.mark.parametrize(
@@ -146,6 +148,7 @@ def test_create_token_google_existing_user(
     assert len(new_token.access_token.split(".")) == 3
     assert new_token.token_type == "bearer"
     assert new_token.user_exists == True
+    assert res.cookies.get("refresh_token")
 
 
 @pytest.mark.parametrize(
@@ -173,9 +176,10 @@ def test_refresh_token(client, refresh_token):
     assert new_token.access_token
     assert len(new_token.access_token.split(".")) == 3
     assert new_token.token_type == "bearer"
+    assert res.cookies.get("refresh_token")
 
 
-def test_missing_refresh_token(client):
+def test_missing_refresh_token(client, refresh_token):
     res = client.post("/api/tokens/refresh")
     assert res.status_code == 401
 
@@ -195,6 +199,21 @@ def test_revoked_refresh_token(client, refresh_token):
 
 
 def test_expired_refresh_token(client, expired_refresh_token):
-    client.cookies.set("token", expired_refresh_token)
+    client.cookies.set("refresh_token", expired_refresh_token)
     res = client.post("/api/tokens/refresh")
+    assert res.status_code == 401
+
+# ----------------------------------------------------------------------------
+
+def test_revoke_refresh_token(client, refresh_token):
+    client.cookies.set("refresh_token", refresh_token)
+    res = client.post("/api/tokens/revoke")
+    assert res.status_code == 204
+    refresh_res = client.post("/api/tokens/refresh")
+    assert refresh_res.status_code == 401
+    assert not res.cookies.get("refresh_token")
+
+
+def test_revoke_missing_refresh_token(client, refresh_token):
+    res = client.post("/api/tokens/revoke")
     assert res.status_code == 401
