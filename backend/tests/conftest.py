@@ -1,11 +1,12 @@
+from datetime import datetime, timedelta, timezone
 from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from unittest.mock import patch
 
+from app.core import oauth2
 from app.core.config import settings
-from app.core.oauth2 import create_access_token
 from app.db import models
 from app.db.db import get_db
 from app.main import app
@@ -112,7 +113,7 @@ def another_user(client, mock_recaptcha):
 
 @pytest.fixture
 def token(user):
-    return create_access_token({"user_id": user["id"]})
+    return oauth2.create_access_token({"user_id": user["id"]})
 
 
 @pytest.fixture
@@ -139,3 +140,37 @@ def mock_verify_google_access_token():
     with patch("app.core.oauth2.verify_google_access_token") as mock_verify:
         mock_verify.return_value = {"sub": "sub", "email": "email@gmail.com"}
         yield mock_verify
+
+
+@pytest.fixture
+def refresh_token(client, user):
+    res = client.post(
+        "/api/tokens",
+        data={"username": user["email"], "password": user["password"]}
+    )
+    assert res.status_code == 201
+
+    return res.cookies.get("refresh_token")
+
+
+@pytest.fixture
+def expired_refresh_token(session, client, user):
+    raw_token = oauth2.generate_refresh_token()
+    token_hash = oauth2.hash_token(raw_token)
+    expires_at = datetime.now(timezone.utc) - timedelta(days=1)
+
+    new_refresh_token = models.RefreshToken(
+        user_id=user["id"],
+        token_hash=token_hash,
+        expires_at=expires_at
+    )
+    session.add(new_refresh_token)
+    session.commit()
+
+    res = client.post(
+        "/api/tokens",
+        data={"username": user["email"], "password": user["password"]}
+    )
+    assert res.status_code == 201
+
+    return res.cookies.get("refresh_token")

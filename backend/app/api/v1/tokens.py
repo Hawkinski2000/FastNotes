@@ -123,7 +123,11 @@ def create_token_google(
 
 
 # Refresh an access token using a valid refresh token
-@router.post("/refresh")
+@router.post(
+    "/refresh",
+    status_code=status.HTTP_200_OK,
+    response_model=token.TokenResponse
+)
 def refresh_token(
     response: Response,
     refresh_token: str = Cookie(default=None, alias="refresh_token"),
@@ -195,4 +199,4 @@ def revoke_token(
 
     response.delete_cookie(key="refresh_token", path="/api/tokens")
 
-    return {"detail": "Refresh token revoked"}
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
