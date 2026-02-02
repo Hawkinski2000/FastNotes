@@ -1,0 +1,56 @@
+services:
+  frontend:
+    image: hawkinski/fastnotes-frontend:latest
+    container_name: fastnotes_frontend
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot:v5.2.2
+    container_name: fastnotes_certbot
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot-webroot:/var/www/certbot
+    entrypoint: >
+      sh -c "
+      trap exit TERM;
+      while :; do
+        certbot renew --webroot -w /var/www/certbot;
+        sleep 12h;
+      done
+      "
+    restart: unless-stopped
+
+  api:
+    image: hawkinski/fastnotes:latest
+    container_name: fastnotes_app
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17.5
+    container_name: postgres_db
+    env_file:
+      - ./.env
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  letsencrypt:
+  certbot-webroot:
+  postgres-db:
