@@ -17,9 +17,6 @@ Running the test:
 
 
 class FastNotesUser(HttpUser):
-    wait_time = between(0.5, 2)
-    
-
     def on_start(self):
         self.user_id = random.randint(1, 1000)
 
@@ -31,13 +28,10 @@ class FastNotesUser(HttpUser):
             }
         )
         self.token = response.json()["access_token"]
+        
 
-        self.note_id_start = (self.user_id - 1) * 100 + 1
-        self.note_id_end = self.user_id * 100
-    
-
-    @task(1)
-    def get_all_notes(self):
+    @task
+    def get_notes(self):
         self.client.get(
             f"/api/notes",
             headers={"Authorization": f"Bearer {self.token}"}

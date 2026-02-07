@@ -14,7 +14,7 @@ DATABASE_URL = (
     f"{settings.database_name}"
 )
 
-engine = create_engine(DATABASE_URL, echo=False, future=True)
+engine = create_engine(DATABASE_URL, echo=False, future=True, max_overflow=5)
 
 SessionLocal = sessionmaker(
     bind=engine,
