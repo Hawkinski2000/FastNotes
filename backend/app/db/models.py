@@ -83,7 +83,12 @@ class Note(Base):
     __tablename__ = "note"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("user.id"),
+        nullable=False,
+        index=True
+    )
     title: Mapped[Optional[str]] = mapped_column(String)
     content: Mapped[Optional[str]] = mapped_column(String)
     created_at: Mapped[datetime] = mapped_column(
