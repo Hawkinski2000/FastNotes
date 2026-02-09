@@ -1,0 +1,7 @@
+{
+  "number_of_users": 20,
+  "ramp_up": 20,
+  "host": "http://localhost:8000",
+  "run_time": "5m",
+  "description_of_change": "switch get_notes ORM query to raw SQL"
+}

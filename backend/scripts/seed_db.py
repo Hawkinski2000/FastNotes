@@ -3,6 +3,7 @@ import random
 from sqlalchemy import text
 import string
 from tqdm import tqdm
+
 from app.db.db import SessionLocal
 from app.db.models import Note, User
 
