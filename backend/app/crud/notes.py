@@ -15,26 +15,17 @@ def create_note(note: note.NoteCreate, user_id: int, db: Session):
 
 
 def get_notes(user_id: int, db: Session):
-    notes = (
-        db.query(Note)
-        .filter(Note.user_id == user_id)
-        .order_by(Note.created_at.desc())
-        .all()
-    )
-    return notes
-
-# def get_notes(user_id: int, db: Session):
-#     return db.execute(
-#         text(
-#             """
-#             SELECT id, title, content, created_at
-#             FROM note
-#             WHERE user_id = :uid
-#             ORDER BY created_at DESC
-#             """
-#         ),
-#         {"uid": user_id}
-#     ).all()
+    return db.execute(
+        text(
+            """
+            SELECT id, title, content, created_at
+            FROM note
+            WHERE user_id = :uid
+            ORDER BY created_at DESC
+            """
+        ),
+        {"uid": user_id}
+    ).all()
 
 
 def update_note(id: int, note: note.NoteCreate, user_id: int, db: Session):

@@ -3,7 +3,7 @@
   "description_of_change": "baseline API",
   "locust_config": {
     "number_of_users": 20,
-    "ramp_up": 20,
+    "ramp_up": 5,
     "host": "http://localhost:8000",
     "run_time": "5m"
   }
