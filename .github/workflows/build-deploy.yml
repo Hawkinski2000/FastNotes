@@ -18,21 +18,11 @@ jobs:
           POSTGRES_DB: ${{ secrets.DATABASE_NAME }}_test
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
       
       redis:
         image: redis:8.4.1-trixie
         ports:
           - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
           
     steps:
       - name: Pull git repo
@@ -67,7 +57,8 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
-          pip install pytest
+          pip install pytest dockerize
+          dockerize -wait tcp://redis:6379 -wait tcp://postgres:5432 -timeout 30s
           python -m pytest --disable-warnings
         
       # ---------------- Docker Login ----------------
