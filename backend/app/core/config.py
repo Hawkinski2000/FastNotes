@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     recaptcha_secret_key: str
     postgres_password: str
     postgres_db: str
+    redis_host: str
 
     class Config:
         env_file = "../.env"

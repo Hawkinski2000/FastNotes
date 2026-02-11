@@ -4,11 +4,12 @@ import redis
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.schemas import note
 from app.db.models import Note
 
 
-r = redis.Redis(host="redis", decode_responses=True)
+r = redis.Redis(host=settings.redis_host, decode_responses=True)
 
 
 def create_note(note: note.NoteCreate, user_id: int, db: Session):

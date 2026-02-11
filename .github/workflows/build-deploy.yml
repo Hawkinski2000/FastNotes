@@ -56,6 +56,7 @@ jobs:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
         run: |
           pip install pytest
           python -m pytest --disable-warnings
