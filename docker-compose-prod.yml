@@ -33,6 +33,7 @@ services:
     container_name: fastnotes_app
     depends_on:
       - postgres
+      - redis
     env_file:
       - ./.env
     ports:
@@ -48,6 +49,12 @@ services:
       - postgres-db:/var/lib/postgresql/data
     ports:
     - "5432:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.4.1-trixie
+    container_name: fastnotes_redis
+    command: redis-server --save "" --appendonly no --maxmemory 32mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
 
 volumes:

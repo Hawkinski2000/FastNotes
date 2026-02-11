@@ -1,5 +1,6 @@
 from locust import HttpUser, task
 import random
+import redis
 
 
 """
@@ -16,8 +17,13 @@ Running the test:
 """
 
 
+r = redis.Redis(host="localhost", decode_responses=True)
+
+
 class FastNotesUser(HttpUser):
     def on_start(self):
+        r.flushdb()
+
         self.user_id = random.randint(1, 1000)
 
         response = self.client.post(
