@@ -89,8 +89,8 @@ class Note(Base):
         nullable=False,
         index=True
     )
-    title: Mapped[Optional[str]] = mapped_column(String)
-    content: Mapped[Optional[str]] = mapped_column(String)
+    title: Mapped[Optional[str]] = mapped_column(String(100))
+    content: Mapped[Optional[str]] = mapped_column(String(1000))
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True),
         nullable=False,

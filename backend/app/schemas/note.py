@@ -1,11 +1,11 @@
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from typing import Optional
 
 
 class NoteBase(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
+    title: Optional[str] = Field(None, max_length=100)
+    content: Optional[str] = Field(None, max_length=1000)
 
 
 class NoteCreate(NoteBase):

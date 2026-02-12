@@ -13,10 +13,20 @@ r = redis.Redis(host=settings.redis_host, decode_responses=True)
 
 
 def create_note(note: note.NoteCreate, user_id: int, db: Session):
+    notes = db.query(Note.id).filter(Note.user_id == user_id).limit(100).all()
+
+    if len(notes) >= 100:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Maximum of 100 notes per user reached"
+        )
+
     new_note = Note(**note.model_dump(exclude_unset=True), user_id=user_id)
     db.add(new_note)
     db.commit()
+
     r.delete(f"notes:{user_id}")
+
     db.refresh(new_note)
     return new_note
 
@@ -66,7 +76,9 @@ def update_note(id: int, note: note.NoteCreate, user_id: int, db: Session):
         synchronize_session=False
     )
     db.commit()
+    
     r.delete(f"notes:{user_id}")
+
     updated_note = note_query.first()
     return updated_note
 
@@ -86,4 +98,5 @@ def delete_note(id: int, user_id: int, db: Session):
 
     db.delete(note)
     db.commit()
+
     r.delete(f"notes:{user_id}")
