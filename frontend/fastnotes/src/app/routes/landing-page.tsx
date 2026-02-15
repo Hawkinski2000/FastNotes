@@ -3,21 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Zap, Shield, Clock } from 'lucide-react'
 
+import BackgroundGrid from '@/components/background-grid'
+
 export default function LandingPage() {
   return (
     <div className="bg-background text-foreground relative flex flex-1 flex-col overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--border) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--border) 1px, transparent 1px)
-          `,
-          backgroundSize: '64px 64px',
-          opacity: 0.4,
-        }}
-      />
+      <BackgroundGrid />
 
       <div
         className="pointer-events-none absolute inset-0"
@@ -50,7 +41,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="flex flex-1 flex-col items-center justify-center px-4 py-16 sm:py-20 lg:py-28">
+      <section className="flex flex-1 flex-col items-center justify-center px-4 sm:py-20 lg:py-28">
         <div
           className="pointer-events-none absolute inset-0 top-0"
           aria-hidden

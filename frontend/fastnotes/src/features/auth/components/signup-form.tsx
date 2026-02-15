@@ -8,6 +8,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import GoogleLoginButton from './GoogleLoginButton'
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
@@ -16,6 +17,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardTitle>Create an account</CardTitle>
         <CardDescription>Enter your information below to create your account</CardDescription>
       </CardHeader>
+
       <CardContent>
         <form>
           <FieldGroup>
@@ -23,21 +25,23 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input id="email" type="email" placeholder="m@example.com" required />
             </Field>
+
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Input id="password" type="password" required />
             </Field>
+
             <Field>
               <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
               <Input id="confirm-password" type="password" required />
             </Field>
+
             <FieldGroup>
               <Field>
                 <Button type="submit">Create Account</Button>
                 <FieldSeparator className="my-2">Or</FieldSeparator>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
+                <GoogleLoginButton continueWithGoogle={() => {}} />
+
                 <FieldDescription className="px-6 text-center">
                   Already have an account? <a href="/login">Sign in</a>
                 </FieldDescription>

@@ -8,7 +8,7 @@ import githubWhite from '@/assets/GitHub_Invertocat_White_Clearspace.svg'
 const THEME_KEY = 'fastnotes-theme'
 const GITHUB_URL = 'https://github.com/Hawkinski2000/FastNotes'
 
-export function Header() {
+export default function Header() {
   const [isDark, setIsDark] = useState(() => {
     return document.documentElement.classList.contains('dark')
   })
