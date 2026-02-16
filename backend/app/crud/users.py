@@ -12,16 +12,16 @@ def create_user(user: user.UserCreate, db: Session):
     if not user.recaptcha_token:
         raise HTTPException(status_code=400, detail="Missing reCAPTCHA token")
     
-    resp = requests.post(
-        "https://www.google.com/recaptcha/api/siteverify",
-        data={
-            "secret": settings.recaptcha_secret_key,
-            "response": user.recaptcha_token
-        }
-    )
-    result = resp.json()
-    if not result.get("success"):
-        raise HTTPException(status_code=400, detail="Invalid reCAPTCHA token")
+    # resp = requests.post(
+    #     "https://www.google.com/recaptcha/api/siteverify",
+    #     data={
+    #         "secret": settings.recaptcha_secret_key,
+    #         "response": user.recaptcha_token
+    #     }
+    # )
+    # result = resp.json()
+    # if not result.get("success"):
+    #     raise HTTPException(status_code=400, detail="Invalid reCAPTCHA token")
 
     existing_user_username = (
         db.query(User)

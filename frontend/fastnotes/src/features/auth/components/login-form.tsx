@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import type { OverridableTokenClientConfig } from '@react-oauth/google'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -11,37 +11,54 @@ import {
 import { Input } from '@/components/ui/input'
 import GoogleLoginButton from './GoogleLoginButton'
 
-export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+type LoginFormProps = React.ComponentProps<typeof Card> & {
+  logIn: (logInData: { email: string; password: string }) => void
+  logInWithGoogle: (overrideConfig?: OverridableTokenClientConfig | undefined) => void
+  loading: boolean
+}
+
+export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }: LoginFormProps) {
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className="flex flex-col gap-6" {...props}>
       <Card>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+
+              const formData = new FormData(e.currentTarget)
+
+              const email = formData.get('email') as string
+              const password = formData.get('password') as string
+
+              logIn({ email, password })
+            }}
+          >
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" name="email" type="email" placeholder="m@example.com" required />
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
+                  {/* <a
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </a> */}
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit">{loading ? 'Logging in...' : 'Login'}</Button>
                 <FieldSeparator className="my-2">Or</FieldSeparator>
-                <GoogleLoginButton continueWithGoogle={() => {}} />
+                <GoogleLoginButton continueWithGoogle={logInWithGoogle} />
 
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="/signup">Sign up</a>

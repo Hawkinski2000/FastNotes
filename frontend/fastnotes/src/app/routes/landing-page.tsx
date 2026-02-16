@@ -1,11 +1,21 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { useAuth } from '@/lib/use-auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Zap, Shield, Clock } from 'lucide-react'
-
 import BackgroundGrid from '@/components/background-grid'
 
 export default function LandingPage() {
+  const { accessToken } = useAuth()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (accessToken) navigate('/notes')
+  }, [accessToken, navigate])
+
   return (
     <div className="bg-background text-foreground relative flex flex-1 flex-col overflow-hidden">
       <BackgroundGrid />

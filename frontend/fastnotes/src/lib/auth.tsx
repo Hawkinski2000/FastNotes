@@ -1,30 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../features/auth/use-auth'
-import { refreshAccessToken, isTokenExpired } from '../utils/auth'
+import { useAuth } from '@/lib/use-auth'
+import { refreshAccessToken, isTokenExpired } from '@/lib/api'
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { accessToken, setAccessToken } = useAuth()
   const [loading, setLoading] = useState(true)
   const [validToken, setValidToken] = useState<string | null>(null)
 
+  const tokenRef = useRef(accessToken)
+
   useEffect(() => {
     const checkToken = async () => {
-      let token: string | null = accessToken
+      let token = tokenRef.current
 
-      if (!accessToken || (accessToken && isTokenExpired(accessToken))) {
-        token = await refreshAccessToken()
-        if (token) {
-          setAccessToken(token)
+      if (!token || isTokenExpired(token)) {
+        try {
+          token = await refreshAccessToken()
+          if (token) setAccessToken(token)
+        } catch (error) {
+          console.error('Token refresh failed', error)
+          token = null
         }
-
-        setValidToken(token)
-        setLoading(false)
       }
+
+      setValidToken(token)
+      setLoading(false)
     }
 
-    checkToken()
-  }, [accessToken, setAccessToken])
+    void checkToken()
+  }, [setAccessToken])
 
   if (loading) {
     return <div>Checking authentication...</div>

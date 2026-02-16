@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { AuthProvider } from '../features/auth/auth-provider'
+import { AuthProvider } from '@/lib/auth-provider'
 
 type AppProviderProps = {
   children: ReactNode
