@@ -14,15 +14,19 @@ export default function Header() {
   })
 
   const toggleTheme = () => {
+    const root = document.documentElement
     const next = !isDark
+
+    root.classList.add('no-transition')
+    root.classList.toggle('dark', next)
     setIsDark(next)
-    if (next) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem(THEME_KEY, 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem(THEME_KEY, 'light')
-    }
+    localStorage.setItem(THEME_KEY, next ? 'dark' : 'light')
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.remove('no-transition')
+      })
+    })
   }
 
   const iconButtonClass =
