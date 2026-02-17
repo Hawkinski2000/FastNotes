@@ -30,7 +30,7 @@ export default function Header() {
   }
 
   const iconButtonClass =
-    'h-9 w-9 rounded-full shadow-sm hover:scale-110 transition-transform duration-200 bg-accent hover:bg-accent text-foreground'
+    'h-9 w-9 rounded-full shadow-sm hover:scale-110 transition-transform bg-accent hover:bg-accent text-foreground'
 
   return (
     <header className="bg-background/90 sticky top-0 z-50 border-b-2 backdrop-blur-md">

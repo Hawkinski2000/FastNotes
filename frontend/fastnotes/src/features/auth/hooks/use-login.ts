@@ -16,8 +16,8 @@ const useLogin = (setLoading: React.Dispatch<React.SetStateAction<boolean>>) => 
       const response = await logInUser(email, password)
       const token = response.data.access_token
       setAccessToken(token)
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoading(false)
     }

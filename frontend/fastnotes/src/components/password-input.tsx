@@ -20,15 +20,13 @@ export default function PasswordInput({
 
   return (
     <Field className="max-w-sm">
-      <InputGroup className="shadow-sm dark:bg-transparent">
+      <InputGroup className="shadow-sm aria-invalid:ring-3 dark:bg-transparent" {...props}>
         <InputGroupInput
           id="password"
           name="password"
           type={showPassword ? 'text' : 'password'}
-          required
           autoComplete={autoComplete}
           className="bg-transparent"
-          {...props}
         />
         <InputGroupAddon align="inline-end">
           <InputGroupButton size="icon-xs" onClick={() => setShowPassword((prev) => !prev)}>

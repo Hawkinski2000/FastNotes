@@ -19,8 +19,8 @@ const useGoogleAuth = (setLoading: React.Dispatch<React.SetStateAction<boolean>>
 
         const token = response.data.access_token
         setAccessToken(token)
-      } catch (error) {
-        console.error(error)
+      } catch (err) {
+        console.error(err)
       } finally {
         setLoading(false)
       }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { OverridableTokenClientConfig } from '@react-oauth/google'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,6 +20,10 @@ type LoginFormProps = React.ComponentProps<typeof Card> & {
 }
 
 export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }: LoginFormProps) {
+  const [formData, setFormData] = useState({ email: '', password: '' })
+
+  const isButtonDisabled = !formData.email || !formData.password
+
   return (
     <div className="flex flex-col gap-6" {...props}>
       <Card>
@@ -26,17 +31,13 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
           <CardTitle>Log in to your account</CardTitle>
           <CardDescription>Enter your information below to log in to your account</CardDescription>
         </CardHeader>
+
         <CardContent>
           <form
+            noValidate
             onSubmit={(e) => {
               e.preventDefault()
-
-              const formData = new FormData(e.currentTarget)
-
-              const email = formData.get('email') as string
-              const password = formData.get('password') as string
-
-              logIn({ email, password })
+              logIn(formData)
             }}
           >
             <FieldGroup>
@@ -46,11 +47,13 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="m@example.com"
-                  required
+                  placeholder="email@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   autoComplete="email"
                 />
               </Field>
+
               <Field className="select-none">
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -61,10 +64,18 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
                     Forgot your password?
                   </a> */}
                 </div>
-                <PasswordInput autoComplete="current-password" />
+                <PasswordInput
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  autoComplete="current-password"
+                />
               </Field>
+
               <Field>
-                <Button type="submit">{loading ? 'Logging in...' : 'Login'}</Button>
+                <Button type="submit" disabled={isButtonDisabled}>
+                  {loading ? 'Logging in...' : 'Login'}
+                </Button>
+
                 <FieldSeparator className="my-2">Or</FieldSeparator>
                 <GoogleLoginButton continueWithGoogle={logInWithGoogle} />
 

@@ -13,9 +13,9 @@ export const refreshAccessToken = async () => {
     if (newToken) {
       return newToken
     }
-  } catch (error) {
-    console.error('Failed to refresh access token', error)
-    throw error
+  } catch (err) {
+    console.error('Failed to refresh access token', err)
+    throw err
   }
 }
 
@@ -30,8 +30,8 @@ export const isTokenExpired = (token: string) => {
 
     const now = Date.now() / 1000
     return decoded.exp < now
-  } catch (error) {
-    console.error('Failed to decode token', error)
+  } catch (err) {
+    console.error('Failed to decode token', err)
     return true
   }
 }
@@ -50,8 +50,8 @@ export const logInUser = async (emailString: string, passwordString: string) => 
     })
 
     return response
-  } catch (error) {
-    console.error('logInUser failed:', error)
-    throw error
+  } catch (err) {
+    console.error('logInUser failed:', err)
+    throw err
   }
 }

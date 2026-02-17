@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import axios from 'axios'
+import validator from 'validator'
 import { API_BASE_URL } from '@/config/api'
 import { logInUser } from '@/lib/api'
 import { useAuth } from '@/lib/use-auth'
@@ -10,15 +10,31 @@ interface SignupData {
   password: string
 }
 
-const useSignup = (setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+const useSignup = (
+  setErrors: React.Dispatch<React.SetStateAction<{ email?: string; password?: string }>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   const { setAccessToken } = useAuth()
-  const [error, setError] = useState<string | null>(null)
 
   const signUp = async ({ username, email, password }: SignupData) => {
     setLoading(true)
-    setError(null)
+    setErrors({})
+
+    const currentErrors: { email?: string; password?: string } = {
+      email: !validator.isEmail(email) ? 'Invalid email address' : undefined,
+      password: password.length < 8 ? 'Password must be at least 8 characters' : undefined,
+    }
 
     try {
+      if (!currentErrors.email) {
+        const res = await axios.get(`${API_BASE_URL}/users/check-email`, { params: { email } })
+        if (res.data.taken) currentErrors.email = 'Email is already registered'
+      }
+
+      setErrors(currentErrors)
+
+      if (Object.values(currentErrors).some(Boolean)) return
+
       const recaptchaToken = 'recaptchaToken'
 
       await axios.post(
@@ -30,14 +46,14 @@ const useSignup = (setLoading: React.Dispatch<React.SetStateAction<boolean>>) =>
       const response = await logInUser(email, password)
       const token = response.data.access_token
       setAccessToken(token)
-    } catch (error) {
-      console.error(error)
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
-  return { signUp, error }
+  return { signUp }
 }
 
 export default useSignup

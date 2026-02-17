@@ -18,8 +18,8 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         try {
           token = await refreshAccessToken()
           if (token) setAccessToken(token)
-        } catch (error) {
-          console.error('Token refresh failed', error)
+        } catch (err) {
+          console.error('Token refresh failed', err)
           token = null
         }
       }
