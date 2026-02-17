@@ -8,19 +8,13 @@ interface SignupData {
   username: string
   email: string
   password: string
-  confirmPassword: string
 }
 
 const useSignup = (setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
   const { setAccessToken } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
-  const signUp = async ({ username, email, password, confirmPassword }: SignupData) => {
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
-
+  const signUp = async ({ username, email, password }: SignupData) => {
     setLoading(true)
     setError(null)
 

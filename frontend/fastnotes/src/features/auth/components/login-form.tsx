@@ -9,6 +9,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import PasswordInput from '@/components/password-input'
 import GoogleLoginButton from './GoogleLoginButton'
 
 type LoginFormProps = React.ComponentProps<typeof Card> & {
@@ -22,8 +23,8 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
     <div className="flex flex-col gap-6" {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>Enter your email below to login to your account</CardDescription>
+          <CardTitle>Log in to your account</CardTitle>
+          <CardDescription>Enter your information below to log in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -39,11 +40,18 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
             }}
           >
             <FieldGroup>
-              <Field>
+              <Field className="select-none">
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" name="email" type="email" placeholder="m@example.com" required />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  autoComplete="email"
+                />
               </Field>
-              <Field>
+              <Field className="select-none">
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   {/* <a
@@ -53,7 +61,7 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
                     Forgot your password?
                   </a> */}
                 </div>
-                <Input id="password" name="password" type="password" required />
+                <PasswordInput autoComplete="current-password" />
               </Field>
               <Field>
                 <Button type="submit">{loading ? 'Logging in...' : 'Login'}</Button>
