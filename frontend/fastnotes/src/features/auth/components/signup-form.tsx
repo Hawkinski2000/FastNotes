@@ -82,7 +82,7 @@ export default function SignupForm({
                 aria-invalid={!!errors.email}
               />
               <FieldDescription
-                className={`text-destructive absolute top-full h-0 pt-2 opacity-0 transition-all ${
+                className={`text-destructive absolute top-full h-0 pt-2 opacity-0 transition-all select-text ${
                   errors.email && 'h-5 opacity-100'
                 }`}
               >
@@ -107,7 +107,7 @@ export default function SignupForm({
                 aria-invalid={!!errors.password}
               />
               <FieldDescription
-                className={`text-destructive absolute top-full h-0 pt-2 opacity-0 transition-all ${
+                className={`text-destructive absolute top-full h-0 pt-2 opacity-0 transition-all select-text ${
                   errors.password && 'h-5 opacity-100'
                 }`}
               >

@@ -17,18 +17,19 @@ const useSignup = (
   const { setAccessToken } = useAuth()
 
   const signUp = async ({ username, email, password }: SignupData) => {
-    setLoading(true)
     setErrors({})
 
     const currentErrors: { email?: string; password?: string } = {
-      email: !validator.isEmail(email) ? 'Invalid email address' : undefined,
-      password: password.length < 8 ? 'Password must be at least 8 characters' : undefined,
+      email: !validator.isEmail(email) ? 'Invalid email address.' : undefined,
+      password: password.length < 8 ? 'Password must be at least 8 characters.' : undefined,
     }
+
+    setLoading(true)
 
     try {
       if (!currentErrors.email) {
         const res = await axios.get(`${API_BASE_URL}/users/check-email`, { params: { email } })
-        if (res.data.taken) currentErrors.email = 'Email is already registered'
+        if (res.data.taken) currentErrors.email = 'Email is already registered.'
       }
 
       setErrors(currentErrors)

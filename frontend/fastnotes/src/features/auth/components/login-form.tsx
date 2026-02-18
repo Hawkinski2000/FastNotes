@@ -15,11 +15,20 @@ import GoogleLoginButton from './GoogleLoginButton'
 
 type LoginFormProps = React.ComponentProps<typeof Card> & {
   logIn: (logInData: { email: string; password: string }) => void
+  errors: { email?: string | undefined; form?: string | undefined }
+  setErrors: React.Dispatch<React.SetStateAction<{ email?: string; form?: string }>>
   logInWithGoogle: (overrideConfig?: OverridableTokenClientConfig | undefined) => void
   loading: boolean
 }
 
-export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }: LoginFormProps) {
+export default function LoginForm({
+  logIn,
+  errors,
+  setErrors,
+  logInWithGoogle,
+  loading,
+  ...props
+}: LoginFormProps) {
   const [formData, setFormData] = useState({ email: '', password: '' })
 
   const isButtonDisabled = !formData.email || !formData.password
@@ -33,6 +42,14 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
         </CardHeader>
 
         <CardContent>
+          <p
+            className={`text-destructive h-0 opacity-0 transition-all ${
+              errors.form && 'mb-1 h-5 opacity-100'
+            }`}
+          >
+            {errors.form}
+          </p>
+
           <form
             noValidate
             onSubmit={(e) => {
@@ -41,7 +58,10 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
             }}
           >
             <FieldGroup>
-              <Field className="select-none">
+              <Field
+                data-invalid={!!errors.email}
+                className={`relative mt-5 duration-150 select-none ${errors.email && 'mb-5'}`}
+              >
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
@@ -49,9 +69,21 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
                   type="email"
                   placeholder="email@example.com"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value })
+                    if (errors.email || errors.form) {
+                      setErrors({})
+                    }
+                  }}
                   autoComplete="email"
                 />
+                <FieldDescription
+                  className={`text-destructive absolute top-full h-0 pt-2 opacity-0 transition-all select-text ${
+                    errors.email && 'h-5 opacity-100'
+                  }`}
+                >
+                  {errors.email}
+                </FieldDescription>
               </Field>
 
               <Field className="select-none">
@@ -66,14 +98,19 @@ export default function LoginForm({ logIn, logInWithGoogle, loading, ...props }:
                 </div>
                 <PasswordInput
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value })
+                    if (errors.email || errors.form) {
+                      setErrors({})
+                    }
+                  }}
                   autoComplete="current-password"
                 />
               </Field>
 
               <Field>
                 <Button type="submit" disabled={isButtonDisabled}>
-                  {loading ? 'Logging in...' : 'Login'}
+                  {loading ? 'Logging in...' : 'Log in'}
                 </Button>
 
                 <FieldSeparator className="my-2">Or</FieldSeparator>

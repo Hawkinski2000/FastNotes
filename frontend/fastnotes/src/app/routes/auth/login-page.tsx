@@ -9,8 +9,9 @@ import BackgroundGrid from '@/components/background-grid'
 export default function LoginPage() {
   const { accessToken } = useAuth()
   const navigate = useNavigate()
+  const [errors, setErrors] = useState<{ email?: string; form?: string }>({})
   const [loading, setLoading] = useState(false)
-  const { logIn } = useLogin(setLoading)
+  const { logIn } = useLogin(setErrors, setLoading)
   const { logInWithGoogle } = useGoogleAuth(setLoading)
 
   useEffect(() => {
@@ -22,7 +23,13 @@ export default function LoginPage() {
       <BackgroundGrid />
 
       <div className="z-10 w-full max-w-sm">
-        <LoginForm logIn={logIn} logInWithGoogle={logInWithGoogle} loading={loading} />
+        <LoginForm
+          logIn={logIn}
+          errors={errors}
+          setErrors={setErrors}
+          loading={loading}
+          logInWithGoogle={logInWithGoogle}
+        />
       </div>
     </div>
   )
