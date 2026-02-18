@@ -15,8 +15,10 @@ import GoogleLoginButton from './GoogleLoginButton'
 
 type SignupFormProps = React.ComponentProps<typeof Card> & {
   signUp: (signUpData: { username: string; email: string; password: string }) => void
-  errors: { email?: string | undefined; password?: string | undefined }
-  setErrors: React.Dispatch<React.SetStateAction<{ email?: string; password?: string }>>
+  errors: { email?: string; password?: string; form?: string }
+  setErrors: React.Dispatch<
+    React.SetStateAction<{ email?: string; password?: string; form?: string }>
+  >
   loading: boolean
   logInWithGoogle: (overrideConfig?: OverridableTokenClientConfig | undefined) => void
 }
@@ -41,6 +43,14 @@ export default function SignupForm({
       </CardHeader>
 
       <CardContent>
+        <p
+          className={`text-destructive h-0 text-sm opacity-0 transition-all ${
+            errors.form && 'mb-3 h-5 opacity-100'
+          }`}
+        >
+          {errors.form}
+        </p>
+
         <form
           noValidate
           onSubmit={(e) => {
@@ -49,7 +59,7 @@ export default function SignupForm({
           }}
         >
           <FieldGroup>
-            <Field className="select-none">
+            {/* <Field className="select-none">
               <FieldLabel htmlFor="username">Username</FieldLabel>
               <Input
                 id="username"
@@ -59,11 +69,11 @@ export default function SignupForm({
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 autoComplete="username"
               />
-            </Field>
+            </Field> */}
 
             <Field
               data-invalid={!!errors.email}
-              className={`relative duration-150 select-none ${errors.email && 'mb-5'}`}
+              className={`relative duration-150 select-none ${errors.email && 'mb-5'} ${errors.form && 'mt-3'}`}
             >
               <FieldLabel htmlFor="email">Email</FieldLabel>
               <Input

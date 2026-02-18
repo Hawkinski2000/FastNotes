@@ -15,7 +15,7 @@ import GoogleLoginButton from './GoogleLoginButton'
 
 type LoginFormProps = React.ComponentProps<typeof Card> & {
   logIn: (logInData: { email: string; password: string }) => void
-  errors: { email?: string | undefined; form?: string | undefined }
+  errors: { email?: string; form?: string }
   setErrors: React.Dispatch<React.SetStateAction<{ email?: string; form?: string }>>
   logInWithGoogle: (overrideConfig?: OverridableTokenClientConfig | undefined) => void
   loading: boolean
@@ -43,8 +43,8 @@ export default function LoginForm({
 
         <CardContent>
           <p
-            className={`text-destructive h-0 opacity-0 transition-all ${
-              errors.form && 'mb-1 h-5 opacity-100'
+            className={`text-destructive h-0 text-sm opacity-0 transition-all ${
+              errors.form && 'mb-3 h-5 opacity-100'
             }`}
           >
             {errors.form}
@@ -60,7 +60,7 @@ export default function LoginForm({
             <FieldGroup>
               <Field
                 data-invalid={!!errors.email}
-                className={`relative mt-5 duration-150 select-none ${errors.email && 'mb-5'}`}
+                className={`relative duration-150 select-none ${errors.email && 'mb-5'} ${errors.form && 'mt-3'}`}
               >
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -100,8 +100,8 @@ export default function LoginForm({
                   value={formData.password}
                   onChange={(e) => {
                     setFormData({ ...formData, password: e.target.value })
-                    if (errors.email || errors.form) {
-                      setErrors({})
+                    if (errors.form) {
+                      setErrors((prev) => ({ ...prev, form: undefined }))
                     }
                   }}
                   autoComplete="current-password"

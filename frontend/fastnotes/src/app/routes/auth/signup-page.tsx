@@ -9,7 +9,7 @@ import BackgroundGrid from '@/components/background-grid'
 export default function SignupPage() {
   const { accessToken } = useAuth()
   const navigate = useNavigate()
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({})
   const [loading, setLoading] = useState(false)
   const { signUp } = useSignup(setErrors, setLoading)
   const { logInWithGoogle } = useGoogleAuth(setLoading)

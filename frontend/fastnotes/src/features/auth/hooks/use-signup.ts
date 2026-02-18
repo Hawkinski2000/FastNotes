@@ -11,7 +11,9 @@ interface SignupData {
 }
 
 const useSignup = (
-  setErrors: React.Dispatch<React.SetStateAction<{ email?: string; password?: string }>>,
+  setErrors: React.Dispatch<
+    React.SetStateAction<{ email?: string; password?: string; form?: string }>
+  >,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   const { setAccessToken } = useAuth()
@@ -47,8 +49,8 @@ const useSignup = (
       const response = await logInUser(email, password)
       const token = response.data.access_token
       setAccessToken(token)
-    } catch (err) {
-      console.error(err)
+    } catch {
+      setErrors((prev) => ({ ...prev, form: 'Something went wrong. Please try again.' }))
     } finally {
       setLoading(false)
     }
