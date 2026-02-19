@@ -10,6 +10,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import PasswordInput from '@/components/password-input'
 import GoogleLoginButton from './GoogleLoginButton'
 
@@ -116,7 +117,13 @@ export default function SignupForm({
             <FieldGroup>
               <Field>
                 <Button type="submit" disabled={isButtonDisabled}>
-                  {loading ? 'Creating account...' : 'Create Account'}
+                  {loading ? (
+                    <>
+                      <Spinner /> Creating account...
+                    </>
+                  ) : (
+                    'Create Account'
+                  )}
                 </Button>
 
                 <FieldSeparator className="my-2">Or</FieldSeparator>

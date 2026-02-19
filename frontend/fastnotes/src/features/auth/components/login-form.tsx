@@ -10,6 +10,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import PasswordInput from '@/components/password-input'
 import GoogleLoginButton from './GoogleLoginButton'
 
@@ -110,7 +111,13 @@ export default function LoginForm({
 
               <Field>
                 <Button type="submit" disabled={isButtonDisabled}>
-                  {loading ? 'Logging in...' : 'Log in'}
+                  {loading ? (
+                    <>
+                      <Spinner /> Logging in...
+                    </>
+                  ) : (
+                    'Log in'
+                  )}
                 </Button>
 
                 <FieldSeparator className="my-2">Or</FieldSeparator>
