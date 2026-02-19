@@ -5,7 +5,6 @@ import { logInUser } from '@/lib/api'
 import { useAuth } from '@/lib/use-auth'
 
 interface SignupData {
-  username: string
   email: string
   password: string
 }
@@ -18,7 +17,7 @@ const useSignup = (
 ) => {
   const { setAccessToken } = useAuth()
 
-  const signUp = async ({ username, email, password }: SignupData) => {
+  const signUp = async ({ email, password }: SignupData) => {
     setErrors({})
 
     const currentErrors: { email?: string; password?: string } = {
@@ -42,7 +41,7 @@ const useSignup = (
 
       await axios.post(
         `${API_BASE_URL}/users`,
-        { username, email, password, recaptcha_token: recaptchaToken },
+        { email, password, recaptcha_token: recaptchaToken },
         { headers: { 'Content-Type': 'application/json' } },
       )
 

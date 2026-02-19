@@ -21,13 +21,6 @@ def create_user(user: user.UserCreate, db: Session = Depends(get_db)):
     return new_user
 
 
-# Check if a username is taken
-@router.get("/check-username", response_model=user.CheckResponse)
-def check_username(username: str, db: Session = Depends(get_db)):
-    response = crud_users.check_username(username, db)
-    return response
-
-
 # Check if an email is already registered
 @router.get("/check-email", response_model=user.CheckResponse)
 def check_email(email: str, db: Session = Depends(get_db)):

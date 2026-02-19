@@ -92,7 +92,7 @@ def create_token_google(
     user = db.query(User).filter(User.google_sub == google_sub).first()
 
     if not user:
-        user = User(username=email, email=email, google_sub=google_sub)
+        user = User(email=email, google_sub=google_sub)
         db.add(user)
         db.commit()
         db.refresh(user)

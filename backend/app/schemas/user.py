@@ -4,7 +4,6 @@ from typing import Optional
 
 
 class UserBase(BaseModel):
-    username: str
     email: EmailStr
     settings: Optional[dict] = None
 

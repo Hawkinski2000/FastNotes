@@ -51,7 +51,6 @@ def seed_data(num_users=1000, notes_per_user=100, note_length=1000):
         
         for i in tqdm(range(1, num_users + 1), desc="Seeding users"):
             user = User(
-                username=f"user_{i}",
                 email=f"user_{i}@example.com",
                 password_hash=password_hash
             )

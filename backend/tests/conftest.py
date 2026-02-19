@@ -89,7 +89,6 @@ def mock_recaptcha():
 @pytest.fixture
 def user(client, mock_recaptcha):
     user_data = {
-        "username": "username",
         "email": "email@gmail.com",
         "password": "password",
         "recaptcha_token": "recaptcha_token"
@@ -106,7 +105,6 @@ def user(client, mock_recaptcha):
 @pytest.fixture
 def another_user(client, mock_recaptcha):
     user_data = {
-        "username": "username2",
         "email": "email2@gmail.com",
         "password": "password",
         "recaptcha_token": "recaptcha_token"
@@ -133,11 +131,7 @@ def authorized_client(client, token):
 
 @pytest.fixture
 def google_user(session):
-    user = models.User(
-        username="email@gmail.com",
-        email="email@gmail.com",
-        google_sub="sub"
-    )
+    user = models.User(email="email@gmail.com", google_sub="sub")
     session.add(user)
     session.commit()
     session.refresh(user)

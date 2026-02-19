@@ -14,7 +14,7 @@ import PasswordInput from '@/components/password-input'
 import GoogleLoginButton from './GoogleLoginButton'
 
 type SignupFormProps = React.ComponentProps<typeof Card> & {
-  signUp: (signUpData: { username: string; email: string; password: string }) => void
+  signUp: (signUpData: { email: string; password: string }) => void
   errors: { email?: string; password?: string; form?: string }
   setErrors: React.Dispatch<
     React.SetStateAction<{ email?: string; password?: string; form?: string }>
@@ -59,18 +59,6 @@ export default function SignupForm({
           }}
         >
           <FieldGroup>
-            {/* <Field className="select-none">
-              <FieldLabel htmlFor="username">Username</FieldLabel>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                autoComplete="username"
-              />
-            </Field> */}
-
             <Field
               data-invalid={!!errors.email}
               className={`relative duration-150 select-none ${errors.email && 'mb-5'} ${errors.form && 'mt-3'}`}

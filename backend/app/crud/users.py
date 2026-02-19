@@ -22,17 +22,6 @@ def create_user(user: user.UserCreate, db: Session):
     # result = resp.json()
     # if not result.get("success"):
     #     raise HTTPException(status_code=400, detail="Invalid reCAPTCHA token")
-
-    existing_user_username = (
-        db.query(User)
-        .filter(User.username == user.username)
-        .first()
-    )
-    if existing_user_username:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Username is already taken",
-        )
     
     existing_user_email = (
         db.query(User)
@@ -60,11 +49,6 @@ def create_user(user: user.UserCreate, db: Session):
     db.commit()
     db.refresh(new_user)
     return new_user
-
-
-def check_username(username: str, db: Session):
-    user = db.query(User).filter(User.username == username).first()
-    return {"taken": bool(user)}
 
 
 def check_email(email: str, db: Session):
