@@ -21,13 +21,13 @@
   position: relative;
   text-align: center;
   -webkit-transition:
-    background-color 0.218s,
-    border-color 0.218s,
-    box-shadow 0.218s;
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
   transition:
-    background-color 0.218s,
-    border-color 0.218s,
-    box-shadow 0.218s;
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
   vertical-align: middle;
   white-space: nowrap;
   min-width: auto;
@@ -72,8 +72,8 @@
 }
 
 .gsi-material-button .gsi-material-button-state {
-  -webkit-transition: opacity 0.218s;
-  transition: opacity 0.218s;
+  -webkit-transition: opacity 150ms;
+  transition: opacity 150ms;
   bottom: 0;
   left: 0;
   opacity: 0;

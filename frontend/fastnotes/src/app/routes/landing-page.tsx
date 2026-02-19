@@ -17,7 +17,7 @@ export default function LandingPage() {
   }, [accessToken, navigate])
 
   return (
-    <div className="bg-background text-foreground relative flex flex-1 flex-col overflow-hidden">
+    <div className="bg-background text-foreground relative mb-5 flex flex-1 flex-col overflow-hidden">
       <BackgroundGrid />
 
       <div
@@ -61,11 +61,11 @@ export default function LandingPage() {
           }}
         />
         <div className="relative mx-auto grid w-[80%] max-w-4xl gap-6 sm:grid-cols-3">
-          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl">
+          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all ease-out hover:-translate-y-1.5 hover:shadow-xl">
             <div className="from-primary/30 to-primary/10 h-0.5 w-full bg-linear-to-r" />
-            <CardHeader className="pb-2">
-              <div className="bg-primary/10 group-hover:bg-primary mb-3 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors duration-300">
-                <Zap className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors duration-300" />
+            <CardHeader className="flex-row items-center gap-2 pb-4 sm:flex-col sm:items-start sm:gap-0 sm:pb-2">
+              <div className="bg-primary/10 group-hover:bg-primary mb-0 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors sm:mb-3">
+                <Zap className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors" />
               </div>
               <CardTitle className="text-lg font-semibold">Fast</CardTitle>
             </CardHeader>
@@ -74,11 +74,11 @@ export default function LandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl">
+          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all ease-out hover:-translate-y-1.5 hover:shadow-xl">
             <div className="from-primary/30 to-primary/10 h-0.5 w-full bg-linear-to-r" />
-            <CardHeader className="pb-2">
-              <div className="bg-primary/10 group-hover:bg-primary mb-3 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors duration-300">
-                <Shield className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors duration-300" />
+            <CardHeader className="flex-row items-center gap-2 pb-4 sm:flex-col sm:items-start sm:gap-0 sm:pb-2">
+              <div className="bg-primary/10 group-hover:bg-primary mb-0 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors sm:mb-3">
+                <Shield className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors" />
               </div>
               <CardTitle className="text-lg font-semibold">Clean</CardTitle>
             </CardHeader>
@@ -87,11 +87,11 @@ export default function LandingPage() {
             </CardContent>
           </Card>
 
-          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-xl">
+          <Card className="group border-border from-card/95 to-card/80 hover:from-primary/15 hover:to-primary/5 overflow-hidden border bg-linear-to-br shadow-md backdrop-blur-sm transition-all ease-out hover:-translate-y-1.5 hover:shadow-xl">
             <div className="from-primary/30 to-primary/10 h-0.5 w-full bg-linear-to-r" />
-            <CardHeader className="pb-2">
-              <div className="bg-primary/10 group-hover:bg-primary mb-3 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors duration-300">
-                <Clock className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors duration-300" />
+            <CardHeader className="flex-row items-center gap-2 pb-4 sm:flex-col sm:items-start sm:gap-0 sm:pb-2">
+              <div className="bg-primary/10 group-hover:bg-primary mb-0 flex w-fit items-center justify-center rounded-lg p-2.5 transition-colors sm:mb-3">
+                <Clock className="text-primary group-hover:text-primary-foreground h-5 w-5 transition-colors" />
               </div>
               <CardTitle className="text-lg font-semibold">Smart</CardTitle>
             </CardHeader>

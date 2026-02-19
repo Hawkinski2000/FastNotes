@@ -115,7 +115,7 @@ export default function SignupForm({
             </Field>
 
             <FieldGroup>
-              <Field>
+              <Field className="pt-5">
                 <Button type="submit" disabled={isButtonDisabled}>
                   {loading ? (
                     <>
@@ -129,7 +129,7 @@ export default function SignupForm({
                 <FieldSeparator className="my-2">Or</FieldSeparator>
                 <GoogleLoginButton continueWithGoogle={logInWithGoogle} />
 
-                <FieldDescription className="px-6 text-center">
+                <FieldDescription className="text-center">
                   Already have an account? <a href="/login">Sign in</a>
                 </FieldDescription>
               </Field>

@@ -9,9 +9,9 @@ import { ProtectedRoute } from '@/lib/auth'
 export const AppRouter = () => {
   return (
     <BrowserRouter>
-      <div className="flex h-screen flex-col overflow-hidden">
+      <div className="flex min-h-screen flex-col">
         <Header />
-        <main className="flex flex-1 flex-col overflow-hidden">
+        <main className="flex flex-1 flex-col">
           <Routes>
             <Route index element={<LandingPage />} />
             <Route path="login" element={<LoginPage />} />
