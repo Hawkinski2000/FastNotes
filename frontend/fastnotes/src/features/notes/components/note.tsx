@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/react/sortable'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -9,65 +9,74 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-type NoteProps = React.ComponentProps<typeof Card> & {
+type NoteProps = {
   note_id: number
   title?: string
   content?: string
   createdAt: Date
+  index: number
 }
 
-export default function Note({ note_id, title, content, createdAt }: NoteProps) {
-  const { ref, isDragging } = useSortable({
-    id: note_id,
-    index: note_id,
-  })
-
+export default function Note({ note_id, title, content, createdAt, index }: NoteProps) {
+  const { ref: sortableRef, isDragging } = useSortable({ id: note_id, index })
   const [open, setOpen] = useState(false)
+  const [rowSpan, setRowSpan] = useState(1)
 
   const cardRef = useRef<HTMLDivElement | null>(null)
 
-  const handleOpen = () => {
-    if (!isDragging) {
-      setOpen(true)
+  useEffect(() => {
+    const calculateSpan = () => {
+      if (!cardRef.current) return
+
+      const rowHeight = 10
+      const gap = 8
+
+      const contentHeight = cardRef.current.scrollHeight
+      const totalHeight = contentHeight + gap
+
+      const span = Math.ceil(totalHeight / (rowHeight + gap))
+      setRowSpan(span)
     }
+
+    const id = requestAnimationFrame(calculateSpan)
+
+    const resizeObserver = new ResizeObserver(() => {
+      calculateSpan()
+    })
+    if (cardRef.current) resizeObserver.observe(cardRef.current)
+
+    return () => {
+      cancelAnimationFrame(id)
+      resizeObserver.disconnect()
+    }
+  }, [title, content])
+
+  const handleOpen = () => {
+    if (!isDragging) setOpen(true)
   }
 
   return (
     <>
       <Card
         ref={(node) => {
-          ref(node)
+          sortableRef(node)
           cardRef.current = node
         }}
+        style={{ gridRowEnd: `span ${rowSpan}` }}
         onClick={handleOpen}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault()
-            handleOpen()
-          }
-        }}
-        className={`hover:border-primary transition-border h-50 cursor-grab overflow-hidden select-none ${isDragging && 'opacity-0'}`}
+        className={`hover:border-primary transition-border cursor-grab select-none ${
+          isDragging ? 'opacity-0' : ''
+        }`}
       >
         <CardHeader>
           <CardTitle className="truncate">{title}</CardTitle>
         </CardHeader>
-        <CardContent className="overflow-hidden">
-          <CardDescription className="line-clamp-6">{content}</CardDescription>
+        <CardContent>
+          <CardDescription className="line-clamp-20">{content}</CardDescription>
         </CardContent>
       </Card>
 
-      <Dialog
-        open={open}
-        onOpenChange={(isOpen) => {
-          setOpen(isOpen)
-
-          if (!isOpen) {
-            requestAnimationFrame(() => {
-              cardRef.current?.focus()
-            })
-          }
-        }}
-      >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="h-[50vh] w-[50vw]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
