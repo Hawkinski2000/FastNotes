@@ -18,8 +18,7 @@ export default function NotesPage() {
   const [modifiers, setModifiers] = useState<Array<ReturnType<typeof RestrictToElement.configure>>>(
     [],
   )
-
-  const dragContainerRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   const [notes, setNotes] = useState<NoteType[]>([
     { note_id: 0, title: 'note title 0', content: 'note content 0', createdAt: new Date() },
@@ -31,7 +30,13 @@ export default function NotesPage() {
         'note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 ',
       createdAt: new Date(),
     },
-    { note_id: 3, title: 'note title 3', content: 'note content 3', createdAt: new Date() },
+    {
+      note_id: 3,
+      title: 'note title 3',
+      content:
+        'note content 3 note content 3 note content 3 note content 3 note content 3 note content 3 note content 3 ',
+      createdAt: new Date(),
+    },
     { note_id: 4, title: 'note title 4', content: 'note content 4', createdAt: new Date() },
     { note_id: 5, title: 'note title 5', content: 'note content 5', createdAt: new Date() },
     { note_id: 6, title: 'note title 6', content: 'note content 6', createdAt: new Date() },
@@ -39,7 +44,7 @@ export default function NotesPage() {
     { note_id: 8, title: 'note title 8', content: 'note content 8', createdAt: new Date() },
   ])
 
-  const sensors = [PointerSensor]
+  const dragContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (dragContainerRef.current) {
@@ -78,6 +83,8 @@ export default function NotesPage() {
     setActiveId(null)
   }
 
+  const sensors = [PointerSensor]
+
   return (
     <>
       <DragDropProvider
@@ -85,18 +92,20 @@ export default function NotesPage() {
         onDragStart={(event) => {
           if (event.operation.source) {
             setActiveId(event.operation.source.id as number)
+            setIsDragging(true)
           }
         }}
-        onDragEnd={(event) => handleDragEnd(event.operation)}
+        onDragEnd={(event) => {
+          handleDragEnd(event.operation)
+          setIsDragging(false)
+        }}
         modifiers={modifiers}
       >
         <div
           ref={dragContainerRef}
-          className="grid gap-2 p-2"
+          className="grid flex-1 grid-flow-row-dense auto-rows-[10px] gap-2 overflow-auto p-2"
           style={{
-            gridTemplateColumns: 'repeat(auto-fill, 240px)',
-            gridAutoRows: '10px',
-            gridAutoFlow: 'dense',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(239px, 1fr))',
           }}
         >
           {notes.map((note, index) => (
@@ -105,7 +114,7 @@ export default function NotesPage() {
         </div>
 
         <DragOverlay>
-          {activeId !== null ? (
+          {isDragging ? (
             <Card className="border-primary flex origin-top-left scale-110 flex-col overflow-hidden opacity-90 shadow-md backdrop-blur-md">
               <CardHeader className="shrink-0">
                 <CardTitle className="truncate">
