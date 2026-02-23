@@ -4,6 +4,13 @@ import { type DragOperation, type Draggable, type Droppable } from '@dnd-kit/abs
 import { PointerSensor } from '@dnd-kit/dom'
 import { RestrictToElement } from '@dnd-kit/dom/modifiers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import Note from '@/features/notes/components/note'
 
 type NoteType = {
@@ -15,11 +22,11 @@ type NoteType = {
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
+  const [openNoteId, setOpenNoteId] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
   const [modifiers, setModifiers] = useState<Array<ReturnType<typeof RestrictToElement.configure>>>(
     [],
   )
-  const [isDragging, setIsDragging] = useState(false)
-
   const [notes, setNotes] = useState<NoteType[]>([
     { note_id: 0, title: 'note title 0', content: 'note content 0', createdAt: new Date() },
     { note_id: 1, title: 'note title 1', content: 'note content 1', createdAt: new Date() },
@@ -44,6 +51,7 @@ export default function NotesPage() {
     { note_id: 8, title: 'note title 8', content: 'note content 8', createdAt: new Date() },
   ])
 
+  const lastFocusedRef = useRef<HTMLElement | null>(null)
   const dragContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -85,6 +93,13 @@ export default function NotesPage() {
 
   const sensors = [PointerSensor]
 
+  const openedNote = notes.find((n) => n.note_id === openNoteId)
+
+  const handleOpenNote = (id: number) => {
+    lastFocusedRef.current = document.activeElement as HTMLElement
+    setOpenNoteId(id)
+  }
+
   return (
     <>
       <DragDropProvider
@@ -109,7 +124,12 @@ export default function NotesPage() {
           }}
         >
           {notes.map((note, index) => (
-            <Note key={note.note_id} index={index} {...note} />
+            <Note
+              key={note.note_id}
+              index={index}
+              {...note}
+              onOpen={() => handleOpenNote(note.note_id)}
+            />
           ))}
         </div>
 
@@ -130,6 +150,29 @@ export default function NotesPage() {
           ) : null}
         </DragOverlay>
       </DragDropProvider>
+
+      <Dialog
+        open={openNoteId !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setOpenNoteId(null)
+
+            requestAnimationFrame(() => {
+              lastFocusedRef.current?.focus()
+            })
+          }
+        }}
+      >
+        {openedNote && (
+          <DialogContent className="h-[50vh] w-[50vw]">
+            <DialogHeader>
+              <DialogTitle>{openedNote.title}</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>{openedNote.content}</DialogDescription>
+            <DialogDescription>{openedNote.createdAt.toDateString()}</DialogDescription>
+          </DialogContent>
+        )}
+      </Dialog>
     </>
   )
 }

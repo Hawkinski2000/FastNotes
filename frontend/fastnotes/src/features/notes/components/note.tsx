@@ -1,13 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/react/sortable'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 
 type NoteProps = {
   note_id: number
@@ -15,10 +8,10 @@ type NoteProps = {
   content?: string
   createdAt: Date
   index: number
+  onOpen: () => void
 }
 
-export default function Note({ note_id, title, content, createdAt, index }: NoteProps) {
-  const [open, setOpen] = useState(false)
+export default function Note({ note_id, title, content, index, onOpen }: NoteProps) {
   const [rowSpan, setRowSpan] = useState(1)
 
   const cardRef = useRef<HTMLDivElement | null>(null)
@@ -53,56 +46,33 @@ export default function Note({ note_id, title, content, createdAt, index }: Note
   }, [title, content])
 
   const handleOpen = () => {
-    if (!isDragging) setOpen(true)
+    if (!isDragging) onOpen()
   }
 
   return (
-    <>
-      <Card
-        ref={(node) => {
-          sortableRef(node)
-          cardRef.current = node
-        }}
-        onClick={handleOpen}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault()
-            handleOpen()
-          }
-        }}
-        style={{ gridRowEnd: `span ${rowSpan}` }}
-        className={`hover:border-primary transition-border cursor-grab select-none ${
-          isDragging ? 'opacity-0' : ''
-        }`}
-      >
-        <CardHeader>
-          <CardTitle className="truncate">{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CardDescription className="line-clamp-20">{content}</CardDescription>
-        </CardContent>
-      </Card>
-
-      <Dialog
-        open={open}
-        onOpenChange={(isOpen) => {
-          setOpen(isOpen)
-
-          if (!isOpen) {
-            requestAnimationFrame(() => {
-              cardRef.current?.focus()
-            })
-          }
-        }}
-      >
-        <DialogContent className="h-[50vh] w-[50vw]">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
-          <DialogDescription>{content}</DialogDescription>
-          <DialogDescription>{createdAt.toDateString()}</DialogDescription>
-        </DialogContent>
-      </Dialog>
-    </>
+    <Card
+      ref={(node) => {
+        sortableRef(node)
+        cardRef.current = node
+      }}
+      onClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault()
+          handleOpen()
+        }
+      }}
+      style={{ gridRowEnd: `span ${rowSpan}` }}
+      className={`hover:border-primary transition-border cursor-grab select-none ${
+        isDragging ? 'opacity-0' : ''
+      }`}
+    >
+      <CardHeader>
+        <CardTitle className="truncate">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="line-clamp-20">{content}</CardDescription>
+      </CardContent>
+    </Card>
   )
 }
