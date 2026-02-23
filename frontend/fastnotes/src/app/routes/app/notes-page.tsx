@@ -1,24 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
-import { DragDropProvider, DragOverlay } from '@dnd-kit/react'
+import { DragDropProvider } from '@dnd-kit/react'
 import { type DragOperation, type Draggable, type Droppable } from '@dnd-kit/abstract'
 import { PointerSensor } from '@dnd-kit/dom'
 import { RestrictToElement } from '@dnd-kit/dom/modifiers'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import Note from '@/features/notes/components/note'
 
-type NoteType = {
-  note_id: number
-  title: string
-  content: string
-  createdAt: Date
-}
+import Note from '@/features/notes/components/note'
+import NoteDragOverlay from '@/features/notes/components/NoteDragOverlay'
+import NoteDialog from '@/features/notes/components/NoteDialog'
+import { type NoteType } from '@/types/api'
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
@@ -133,46 +122,15 @@ export default function NotesPage() {
           ))}
         </div>
 
-        <DragOverlay>
-          {isDragging ? (
-            <Card className="border-primary flex origin-top-left scale-110 flex-col overflow-hidden opacity-90 shadow-md backdrop-blur-md">
-              <CardHeader className="shrink-0">
-                <CardTitle className="truncate">
-                  {activeId !== null && notes.find((n) => n.note_id === activeId)!.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="line-clamp-20 overflow-hidden">
-                  {activeId !== null && notes.find((n) => n.note_id === activeId)!.content}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ) : null}
-        </DragOverlay>
+        <NoteDragOverlay isDragging={isDragging} activeId={activeId} notes={notes} />
       </DragDropProvider>
 
-      <Dialog
-        open={openNoteId !== null}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            setOpenNoteId(null)
-
-            requestAnimationFrame(() => {
-              lastFocusedRef.current?.focus()
-            })
-          }
-        }}
-      >
-        {openedNote && (
-          <DialogContent className="h-[50vh] w-[50vw]">
-            <DialogHeader>
-              <DialogTitle>{openedNote.title}</DialogTitle>
-            </DialogHeader>
-            <DialogDescription>{openedNote.content}</DialogDescription>
-            <DialogDescription>{openedNote.createdAt.toDateString()}</DialogDescription>
-          </DialogContent>
-        )}
-      </Dialog>
+      <NoteDialog
+        openNoteId={openNoteId}
+        setOpenNoteId={setOpenNoteId}
+        openedNote={openedNote}
+        lastFocusedRef={lastFocusedRef}
+      />
     </>
   )
 }
