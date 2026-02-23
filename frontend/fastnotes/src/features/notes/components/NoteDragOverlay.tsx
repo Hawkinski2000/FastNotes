@@ -18,6 +18,7 @@ export default function NoteDragOverlay({ isDragging, activeId, notes }: NoteDra
               {activeId !== null && notes.find((n) => n.note_id === activeId)!.title}
             </CardTitle>
           </CardHeader>
+
           <CardContent>
             <CardDescription className="line-clamp-20 overflow-hidden">
               {activeId !== null && notes.find((n) => n.note_id === activeId)!.content}
