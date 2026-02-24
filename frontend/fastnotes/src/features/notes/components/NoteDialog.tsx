@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type NoteType } from '@/types/api'
@@ -43,23 +50,27 @@ export default function NoteDialog({
       {openedNote && (
         <DialogContent className="flex h-full max-h-full w-full max-w-full flex-col sm:h-auto sm:max-h-[90vh] sm:w-[30vw]">
           <DialogHeader>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
-              className="border-none p-0 text-xl font-semibold tracking-tight shadow-none focus-visible:ring-0 md:text-xl"
-            />
+            <DialogTitle>
+              <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title"
+                className="border-none p-0 text-xl tracking-tight shadow-none focus-visible:ring-0 md:text-xl"
+              />
+            </DialogTitle>
           </DialogHeader>
 
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            placeholder="Write something..."
             className="field-sizing-content min-h-0 flex-1 resize-none border-none p-0 shadow-none focus-visible:ring-0"
           />
-
-          <DialogDescription className="text-right text-sm">
-            {openedNote.createdAt.toDateString()}
-          </DialogDescription>
+          <DialogFooter>
+            <DialogDescription className="text-right text-sm">
+              {openedNote.createdAt.toDateString()}
+            </DialogDescription>
+          </DialogFooter>
         </DialogContent>
       )}
     </Dialog>

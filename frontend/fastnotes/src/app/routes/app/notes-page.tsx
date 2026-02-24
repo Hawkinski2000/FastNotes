@@ -3,11 +3,12 @@ import { DragDropProvider } from '@dnd-kit/react'
 import { type DragOperation, type Draggable, type Droppable } from '@dnd-kit/abstract'
 import { PointerSensor } from '@dnd-kit/dom'
 import { RestrictToElement } from '@dnd-kit/dom/modifiers'
-
 import Note from '@/features/notes/components/note'
 import NoteDragOverlay from '@/features/notes/components/NoteDragOverlay'
 import NoteDialog from '@/features/notes/components/NoteDialog'
 import { type NoteType } from '@/types/api'
+import { useAuth } from '@/lib/use-auth'
+import { getNotes } from '@/lib/api'
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
@@ -16,32 +17,23 @@ export default function NotesPage() {
   const [modifiers, setModifiers] = useState<Array<ReturnType<typeof RestrictToElement.configure>>>(
     [],
   )
-  const [notes, setNotes] = useState<NoteType[]>([
-    { note_id: 0, title: 'note title 0', content: 'note content 0', createdAt: new Date() },
-    { note_id: 1, title: 'note title 1', content: 'note content 1', createdAt: new Date() },
-    {
-      note_id: 2,
-      title: 'note title 2',
-      content:
-        'note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 note content 2 ',
-      createdAt: new Date(),
-    },
-    {
-      note_id: 3,
-      title: 'note title 3',
-      content:
-        'note content 3 note content 3 note content 3 note content 3 note content 3 note content 3 note content 3 ',
-      createdAt: new Date(),
-    },
-    { note_id: 4, title: 'note title 4', content: 'note content 4', createdAt: new Date() },
-    { note_id: 5, title: 'note title 5', content: 'note content 5', createdAt: new Date() },
-    { note_id: 6, title: 'note title 6', content: 'note content 6', createdAt: new Date() },
-    { note_id: 7, title: 'note title 7', content: 'note content 7', createdAt: new Date() },
-    { note_id: 8, title: 'note title 8', content: 'note content 8', createdAt: new Date() },
-  ])
+  const [notes, setNotes] = useState<NoteType[]>([])
 
   const lastFocusedRef = useRef<HTMLElement | null>(null)
   const dragContainerRef = useRef<HTMLDivElement>(null)
+
+  const { accessToken } = useAuth()
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      if (!accessToken) return
+
+      const data = await getNotes(accessToken)
+      setNotes(data)
+    }
+
+    fetchNotes()
+  }, [accessToken])
 
   useEffect(() => {
     if (dragContainerRef.current) {
@@ -53,10 +45,11 @@ export default function NotesPage() {
     }
   }, [])
 
-  type NoteDraggable = Draggable<NoteType>
-  type NoteDroppable = Droppable<NoteType>
+  const sensors = [PointerSensor]
 
-  const handleDragEnd = (operation: DragOperation<NoteDraggable, NoteDroppable>) => {
+  const openedNote = notes.find((n) => n.id === openNoteId)
+
+  const handleDragEnd = (operation: DragOperation<Draggable<NoteType>, Droppable<NoteType>>) => {
     const { source, target } = operation
 
     if (!source || !target) return
@@ -67,8 +60,8 @@ export default function NotesPage() {
     if (fromId !== toId) {
       setNotes((prevNotes) => {
         const newNotes = [...prevNotes]
-        const fromIndex = newNotes.findIndex((n) => n.note_id === fromId)
-        const toIndex = newNotes.findIndex((n) => n.note_id === toId)
+        const fromIndex = newNotes.findIndex((n) => n.id === fromId)
+        const toIndex = newNotes.findIndex((n) => n.id === toId)
 
         const [movedNote] = newNotes.splice(fromIndex, 1)
         newNotes.splice(toIndex, 0, movedNote)
@@ -79,10 +72,6 @@ export default function NotesPage() {
 
     setActiveId(null)
   }
-
-  const sensors = [PointerSensor]
-
-  const openedNote = notes.find((n) => n.note_id === openNoteId)
 
   const handleOpenNote = (id: number) => {
     lastFocusedRef.current = document.activeElement as HTMLElement
@@ -113,12 +102,7 @@ export default function NotesPage() {
           }}
         >
           {notes.map((note, index) => (
-            <Note
-              key={note.note_id}
-              index={index}
-              {...note}
-              onOpen={() => handleOpenNote(note.note_id)}
-            />
+            <Note key={note.id} index={index} {...note} onOpen={() => handleOpenNote(note.id)} />
           ))}
         </div>
 

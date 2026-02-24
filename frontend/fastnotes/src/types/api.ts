@@ -1,5 +1,12 @@
+export type RawNoteType = {
+  id: number
+  title: string
+  content: string
+  created_at: string
+}
+
 export type NoteType = {
-  note_id: number
+  id: number
   title: string
   content: string
   createdAt: Date

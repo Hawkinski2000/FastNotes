@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { API_BASE_URL } from '@/config/api'
+import { type RawNoteType } from '@/types/api'
 
 export const refreshAccessToken = async () => {
   try {
@@ -53,5 +54,24 @@ export const logInUser = async (emailString: string, passwordString: string) => 
   } catch (err) {
     console.error('logInUser failed:', err)
     throw err
+  }
+}
+
+export const getNotes = async (token: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/notes`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    return response.data.map((note: RawNoteType) => ({
+      id: note.id,
+      title: note.title,
+      content: note.content,
+      createdAt: new Date(note.created_at),
+    }))
+  } catch (err) {
+    console.error('Failed to fetch notes', err)
+    return []
   }
 }

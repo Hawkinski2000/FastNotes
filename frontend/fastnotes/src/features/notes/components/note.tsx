@@ -3,20 +3,19 @@ import { useSortable } from '@dnd-kit/react/sortable'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 type NoteProps = {
-  note_id: number
+  id: number
   title?: string
   content?: string
-  createdAt: Date
   index: number
   onOpen: () => void
 }
 
-export default function Note({ note_id, title, content, index, onOpen }: NoteProps) {
+export default function Note({ id, title, content, index, onOpen }: NoteProps) {
   const [rowSpan, setRowSpan] = useState(1)
 
   const cardRef = useRef<HTMLDivElement | null>(null)
 
-  const { ref: sortableRef, isDragging } = useSortable({ id: note_id, index })
+  const { ref: sortableRef, isDragging } = useSortable({ id: id, index })
 
   useEffect(() => {
     const calculateSpan = () => {
@@ -71,7 +70,7 @@ export default function Note({ note_id, title, content, index, onOpen }: NotePro
         <CardTitle className="truncate">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className="line-clamp-20">{content}</CardDescription>
+        <CardDescription className="line-clamp-20 wrap-break-word">{content}</CardDescription>
       </CardContent>
     </Card>
   )
