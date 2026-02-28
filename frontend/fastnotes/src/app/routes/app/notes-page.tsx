@@ -6,9 +6,11 @@ import { RestrictToElement } from '@dnd-kit/dom/modifiers'
 import Note from '@/features/notes/components/note'
 import NoteDragOverlay from '@/features/notes/components/NoteDragOverlay'
 import NoteDialog from '@/features/notes/components/NoteDialog'
-import { type NoteType } from '@/types/api'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import { type NoteType, type NoteCreateType } from '@/types/api'
 import { useAuth } from '@/lib/use-auth'
-import { getNotes } from '@/lib/api'
+import { getNotes, createNote } from '@/lib/api'
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
@@ -18,6 +20,7 @@ export default function NotesPage() {
     [],
   )
   const [notes, setNotes] = useState<NoteType[]>([])
+  const [creatingNote, setCreatingNote] = useState<boolean>(false)
 
   const lastFocusedRef = useRef<HTMLElement | null>(null)
   const dragContainerRef = useRef<HTMLDivElement>(null)
@@ -78,6 +81,16 @@ export default function NotesPage() {
     setOpenNoteId(id)
   }
 
+  const handleCreateNote = async (newNoteData: NoteCreateType) => {
+    if (!accessToken) return
+
+    const newNote = await createNote(newNoteData, accessToken)
+
+    setNotes((prev) => [newNote, ...prev])
+
+    setCreatingNote(false)
+  }
+
   return (
     <>
       <DragDropProvider
@@ -108,13 +121,21 @@ export default function NotesPage() {
 
         <NoteDragOverlay isDragging={isDragging} activeId={activeId} notes={notes} />
       </DragDropProvider>
-
       <NoteDialog
+        creatingNote={creatingNote}
         openNoteId={openNoteId}
         setOpenNoteId={setOpenNoteId}
         openedNote={openedNote}
         lastFocusedRef={lastFocusedRef}
+        handleCreateNote={handleCreateNote}
       />
+
+      <Button
+        className="fixed right-6 bottom-6 h-12 w-12 rounded-lg"
+        onClick={() => setCreatingNote(!creatingNote)}
+      >
+        <Plus />
+      </Button>
     </>
   )
 }

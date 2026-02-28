@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { API_BASE_URL } from '@/config/api'
-import { type RawNoteType } from '@/types/api'
+import { type RawNoteType, type NoteCreateType } from '@/types/api'
 
 export const refreshAccessToken = async () => {
   try {
@@ -73,5 +73,27 @@ export const getNotes = async (token: string) => {
   } catch (err) {
     console.error('Failed to fetch notes', err)
     return []
+  }
+}
+
+export const createNote = async (newNoteData: NoteCreateType, token: string) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/notes`, newNoteData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const note: RawNoteType = response.data
+
+    return {
+      id: note.id,
+      title: note.title,
+      content: note.content,
+      createdAt: new Date(note.created_at),
+    }
+  } catch (err) {
+    console.error('Failed to create note', err)
+    throw err
   }
 }

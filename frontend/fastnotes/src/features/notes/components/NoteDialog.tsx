@@ -9,20 +9,24 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { type NoteType } from '@/types/api'
+import { type NoteType, type NoteCreateType } from '@/types/api'
 
 type NoteDialogProps = {
+  creatingNote: boolean
   openNoteId: number | null
   setOpenNoteId: React.Dispatch<React.SetStateAction<number | null>>
   openedNote: NoteType | undefined
   lastFocusedRef: React.RefObject<HTMLElement | null>
+  handleCreateNote: (newNoteData: NoteCreateType) => Promise<void>
 }
 
 export default function NoteDialog({
+  creatingNote,
   openNoteId,
   setOpenNoteId,
   openedNote,
   lastFocusedRef,
+  handleCreateNote,
 }: NoteDialogProps) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -30,16 +34,20 @@ export default function NoteDialog({
   useEffect(() => {
     if (!openedNote) return
     requestAnimationFrame(() => {
-      setTitle(openedNote.title)
-      setContent(openedNote.content)
+      setTitle(openedNote.title || '')
+      setContent(openedNote.content || '')
     })
   }, [openedNote])
 
   return (
     <Dialog
-      open={openNoteId !== null}
+      open={creatingNote || openNoteId !== null}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
+          if (creatingNote) {
+            handleCreateNote({ title: title, content: content })
+          }
+
           setOpenNoteId(null)
           setTitle('')
           setContent('')
@@ -47,7 +55,7 @@ export default function NoteDialog({
         }
       }}
     >
-      {openedNote && (
+      {(creatingNote || openedNote) && (
         <DialogContent className="flex h-full max-h-full w-full max-w-full flex-col sm:h-auto sm:max-h-[90vh] sm:w-[30vw]">
           <DialogHeader>
             <DialogTitle>
@@ -68,7 +76,7 @@ export default function NoteDialog({
           />
           <DialogFooter>
             <DialogDescription className="text-right text-sm">
-              {openedNote.createdAt.toDateString()}
+              {openedNote && openedNote.createdAt.toDateString()}
             </DialogDescription>
           </DialogFooter>
         </DialogContent>
