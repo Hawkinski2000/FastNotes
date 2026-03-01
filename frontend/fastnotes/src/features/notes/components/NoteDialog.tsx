@@ -18,6 +18,7 @@ type NoteDialogProps = {
   openedNote: NoteType | undefined
   lastFocusedRef: React.RefObject<HTMLElement | null>
   handleCreateNote: (newNoteData: NoteCreateType) => Promise<void>
+  handleUpdateNote: (id: number, newNoteData: NoteCreateType) => Promise<void>
 }
 
 export default function NoteDialog({
@@ -27,6 +28,7 @@ export default function NoteDialog({
   openedNote,
   lastFocusedRef,
   handleCreateNote,
+  handleUpdateNote,
 }: NoteDialogProps) {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -46,6 +48,8 @@ export default function NoteDialog({
         if (!isOpen) {
           if (creatingNote) {
             handleCreateNote({ title: title, content: content })
+          } else if (openNoteId !== null) {
+            handleUpdateNote(openNoteId, { title: title, content: content })
           }
 
           setOpenNoteId(null)

@@ -97,3 +97,25 @@ export const createNote = async (newNoteData: NoteCreateType, token: string) => 
     throw err
   }
 }
+
+export const updateNote = async (id: number, newNoteData: NoteCreateType, token: string) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/notes/${id}`, newNoteData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const note: RawNoteType = response.data
+
+    return {
+      id: note.id,
+      title: note.title,
+      content: note.content,
+      createdAt: new Date(note.created_at),
+    }
+  } catch (err) {
+    console.error('Failed to update note', err)
+    throw err
+  }
+}

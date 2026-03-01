@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { type NoteType, type NoteCreateType } from '@/types/api'
 import { useAuth } from '@/lib/use-auth'
-import { getNotes, createNote } from '@/lib/api'
+import { getNotes, createNote, updateNote } from '@/lib/api'
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
@@ -91,6 +91,14 @@ export default function NotesPage() {
     setCreatingNote(false)
   }
 
+  const handleUpdateNote = async (id: number, newNoteData: NoteCreateType) => {
+    if (!accessToken) return
+
+    const newNote = await updateNote(id, newNoteData, accessToken)
+
+    setNotes((prev) => prev.map((note) => (note.id === id ? newNote : note)))
+  }
+
   return (
     <>
       <DragDropProvider
@@ -128,6 +136,7 @@ export default function NotesPage() {
         openedNote={openedNote}
         lastFocusedRef={lastFocusedRef}
         handleCreateNote={handleCreateNote}
+        handleUpdateNote={handleUpdateNote}
       />
 
       <Button
