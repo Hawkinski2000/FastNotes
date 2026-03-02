@@ -7,7 +7,7 @@ import Note from '@/features/notes/components/note'
 import NoteDragOverlay from '@/features/notes/components/NoteDragOverlay'
 import NoteDialog from '@/features/notes/components/NoteDialog'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import { type NoteType, type NoteCreateType } from '@/types/api'
 import { useAuth } from '@/lib/use-auth'
 import { getNotes, createNote, updateNote } from '@/lib/api'
@@ -143,7 +143,7 @@ export default function NotesPage() {
         className="fixed right-6 bottom-6 h-12 w-12 rounded-lg"
         onClick={() => setCreatingNote(!creatingNote)}
       >
-        <Plus />
+        <PlusIcon />
       </Button>
     </>
   )

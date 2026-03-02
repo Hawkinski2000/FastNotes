@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/react/sortable'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { EllipsisVerticalIcon, Trash2Icon } from 'lucide-react'
 
 type NoteProps = {
   id: number
@@ -62,7 +70,7 @@ export default function Note({ id, title, content, index, onOpen }: NoteProps) {
         }
       }}
       style={{ gridRowEnd: `span ${rowSpan}` }}
-      className={`hover:border-primary transition-border cursor-grab select-none ${
+      className={`hover:border-primary transition-border relative cursor-grab select-none ${
         isDragging ? 'opacity-0' : ''
       }`}
     >
@@ -72,6 +80,24 @@ export default function Note({ id, title, content, index, onOpen }: NoteProps) {
       <CardContent>
         <CardDescription className="line-clamp-20 wrap-break-word">{content}</CardDescription>
       </CardContent>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={'ghost'}
+            size={'icon'}
+            className="full absolute right-1 bottom-1 rounded-full"
+          >
+            <EllipsisVerticalIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem>
+            <Trash2Icon />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </Card>
   )
 }
