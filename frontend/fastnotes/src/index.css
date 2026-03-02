@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -205,6 +207,7 @@
     @apply bg-background text-foreground m-0;
     font-family: var(--font-sans);
     letter-spacing: var(--tracking-normal);
+    @apply bg-background text-foreground;
   }
 
   button:not(:disabled),

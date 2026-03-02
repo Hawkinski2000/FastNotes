@@ -13,6 +13,7 @@ import { type NoteType, type NoteCreateType } from '@/types/api'
 
 type NoteDialogProps = {
   creatingNote: boolean
+  setCreatingNote: React.Dispatch<React.SetStateAction<boolean>>
   openNoteId: number | null
   setOpenNoteId: React.Dispatch<React.SetStateAction<number | null>>
   openedNote: NoteType | undefined
@@ -23,6 +24,7 @@ type NoteDialogProps = {
 
 export default function NoteDialog({
   creatingNote,
+  setCreatingNote,
   openNoteId,
   setOpenNoteId,
   openedNote,
@@ -46,13 +48,14 @@ export default function NoteDialog({
       open={creatingNote || openNoteId !== null}
       onOpenChange={(isOpen) => {
         if (!isOpen) {
-          if (creatingNote) {
+          if (creatingNote && (title || content)) {
             handleCreateNote({ title: title, content: content })
           } else if (openNoteId !== null) {
             handleUpdateNote(openNoteId, { title: title, content: content })
           }
 
           setOpenNoteId(null)
+          setCreatingNote(false)
           setTitle('')
           setContent('')
           requestAnimationFrame(() => lastFocusedRef.current?.focus())

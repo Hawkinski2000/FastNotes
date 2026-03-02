@@ -16,9 +16,10 @@ type NoteProps = {
   content?: string
   index: number
   onOpen: () => void
+  handleDeleteNote: (id: number) => Promise<void>
 }
 
-export default function Note({ id, title, content, index, onOpen }: NoteProps) {
+export default function Note({ id, title, content, index, onOpen, handleDeleteNote }: NoteProps) {
   const [rowSpan, setRowSpan] = useState(1)
 
   const cardRef = useRef<HTMLDivElement | null>(null)
@@ -92,7 +93,13 @@ export default function Note({ id, title, content, index, onOpen }: NoteProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation()
+              handleDeleteNote(id)
+            }}
+            variant="destructive"
+          >
             <Trash2Icon />
             Delete
           </DropdownMenuItem>

@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { PlusIcon } from 'lucide-react'
 import { type NoteType, type NoteCreateType } from '@/types/api'
 import { useAuth } from '@/lib/use-auth'
-import { getNotes, createNote, updateNote } from '@/lib/api'
+import { getNotes, createNote, updateNote, deleteNote } from '@/lib/api'
 
 export default function NotesPage() {
   const [activeId, setActiveId] = useState<number | null>(null)
@@ -87,8 +87,6 @@ export default function NotesPage() {
     const newNote = await createNote(newNoteData, accessToken)
 
     setNotes((prev) => [newNote, ...prev])
-
-    setCreatingNote(false)
   }
 
   const handleUpdateNote = async (id: number, newNoteData: NoteCreateType) => {
@@ -97,6 +95,14 @@ export default function NotesPage() {
     const newNote = await updateNote(id, newNoteData, accessToken)
 
     setNotes((prev) => prev.map((note) => (note.id === id ? newNote : note)))
+  }
+
+  const handleDeleteNote = async (id: number) => {
+    if (!accessToken) return
+
+    await deleteNote(id, accessToken)
+
+    setNotes((prev) => prev.filter((note) => note.id !== id))
   }
 
   return (
@@ -123,7 +129,13 @@ export default function NotesPage() {
           }}
         >
           {notes.map((note, index) => (
-            <Note key={note.id} index={index} {...note} onOpen={() => handleOpenNote(note.id)} />
+            <Note
+              key={note.id}
+              index={index}
+              {...note}
+              onOpen={() => handleOpenNote(note.id)}
+              handleDeleteNote={handleDeleteNote}
+            />
           ))}
         </div>
 
@@ -131,6 +143,7 @@ export default function NotesPage() {
       </DragDropProvider>
       <NoteDialog
         creatingNote={creatingNote}
+        setCreatingNote={setCreatingNote}
         openNoteId={openNoteId}
         setOpenNoteId={setOpenNoteId}
         openedNote={openedNote}

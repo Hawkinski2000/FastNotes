@@ -119,3 +119,16 @@ export const updateNote = async (id: number, newNoteData: NoteCreateType, token:
     throw err
   }
 }
+
+export const deleteNote = async (id: number, token: string) => {
+  try {
+    await axios.delete(`${API_BASE_URL}/notes/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  } catch (err) {
+    console.error('Failed to delete note', err)
+    throw err
+  }
+}
