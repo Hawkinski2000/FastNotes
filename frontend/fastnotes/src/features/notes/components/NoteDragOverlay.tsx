@@ -1,5 +1,7 @@
 import { DragOverlay } from '@dnd-kit/react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { EllipsisVerticalIcon } from 'lucide-react'
 import { type NoteType } from '@/types/api'
 
 type NoteDragOverlayProps = {
@@ -23,6 +25,14 @@ export default function NoteDragOverlay({ isDragging, activeId, notes }: NoteDra
             <CardDescription className="line-clamp-20 overflow-hidden">
               {activeId !== null && notes.find((n) => n.id === activeId)!.content}
             </CardDescription>
+
+            <Button
+              variant={'ghost'}
+              size={'icon'}
+              className="full absolute right-1 bottom-1 rounded-full"
+            >
+              <EllipsisVerticalIcon />
+            </Button>
           </CardContent>
         </Card>
       ) : null}

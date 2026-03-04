@@ -21,6 +21,11 @@ type NoteProps = {
 
 export default function Note({ id, title, content, index, onOpen, handleDeleteNote }: NoteProps) {
   const [rowSpan, setRowSpan] = useState(1)
+  const [hovering, setHovering] = useState(false)
+  const [keyboardFocus, setKeyboardFocus] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const focused = hovering || keyboardFocus || menuOpen
 
   const cardRef = useRef<HTMLDivElement | null>(null)
 
@@ -64,6 +69,10 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         cardRef.current = node
       }}
       onClick={handleOpen}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      onFocus={() => setKeyboardFocus(true)}
+      onBlur={() => setKeyboardFocus(false)}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault()
@@ -71,7 +80,7 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         }
       }}
       style={{ gridRowEnd: `span ${rowSpan}` }}
-      className={`hover:border-primary transition-border relative cursor-grab select-none ${
+      className={`hover:border-primary relative cursor-grab transition select-none ${
         isDragging ? 'opacity-0' : ''
       }`}
     >
@@ -82,12 +91,12 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         <CardDescription className="line-clamp-20 wrap-break-word">{content}</CardDescription>
       </CardContent>
 
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button
             variant={'ghost'}
             size={'icon'}
-            className="full absolute right-1 bottom-1 rounded-full"
+            className={`full absolute right-1 bottom-1 rounded-full opacity-0 transition ${focused && 'opacity-100'}`}
           >
             <EllipsisVerticalIcon />
           </Button>

@@ -150,6 +150,7 @@ export default function NotesPage() {
         lastFocusedRef={lastFocusedRef}
         handleCreateNote={handleCreateNote}
         handleUpdateNote={handleUpdateNote}
+        handleDeleteNote={handleDeleteNote}
       />
 
       <Button
