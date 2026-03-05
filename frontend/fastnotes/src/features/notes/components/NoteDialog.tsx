@@ -99,7 +99,7 @@ export default function NoteDialog({
             {openNoteId && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant={'ghost'} size={'icon'} className="rounded-full">
+                  <Button variant={'ghost'} size={'icon'} className="rounded-full shadow-none">
                     <EllipsisVerticalIcon />
                   </Button>
                 </DropdownMenuTrigger>

@@ -22,7 +22,7 @@ export default function NoteDragOverlay({ isDragging, activeId, notes }: NoteDra
           </CardHeader>
 
           <CardContent>
-            <CardDescription className="line-clamp-20 overflow-hidden">
+            <CardDescription className="line-clamp-20 wrap-break-word whitespace-pre-wrap">
               {activeId !== null && notes.find((n) => n.id === activeId)!.content}
             </CardDescription>
 

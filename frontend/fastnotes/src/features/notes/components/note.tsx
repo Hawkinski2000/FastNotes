@@ -80,7 +80,7 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         }
       }}
       style={{ gridRowEnd: `span ${rowSpan}` }}
-      className={`hover:border-primary relative cursor-grab transition select-none ${
+      className={`hover:border-primary relative cursor-grab transition-colors select-none ${
         isDragging ? 'opacity-0' : ''
       }`}
     >
@@ -88,7 +88,9 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         <CardTitle className="truncate">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className="line-clamp-20 wrap-break-word">{content}</CardDescription>
+        <CardDescription className="line-clamp-20 wrap-break-word whitespace-pre-wrap">
+          {content}
+        </CardDescription>
       </CardContent>
 
       <DropdownMenu onOpenChange={setMenuOpen}>
@@ -96,7 +98,7 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
           <Button
             variant={'ghost'}
             size={'icon'}
-            className={`full absolute right-1 bottom-1 rounded-full opacity-0 transition ${focused && 'opacity-100'}`}
+            className={`full absolute right-1 bottom-1 rounded-full opacity-0 shadow-none transition ${focused && 'opacity-100'}`}
           >
             <EllipsisVerticalIcon />
           </Button>
