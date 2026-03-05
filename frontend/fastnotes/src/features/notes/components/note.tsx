@@ -87,7 +87,7 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
       <CardHeader>
         <CardTitle className="truncate">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-8">
         <CardDescription className="line-clamp-20 wrap-break-word whitespace-pre-wrap">
           {content}
         </CardDescription>
