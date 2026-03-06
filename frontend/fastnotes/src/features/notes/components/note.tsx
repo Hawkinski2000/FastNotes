@@ -28,34 +28,24 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
   const focused = hovering || keyboardFocus || menuOpen
 
   const cardRef = useRef<HTMLDivElement | null>(null)
+  const measureRef = useRef<HTMLDivElement | null>(null)
 
   const { ref: sortableRef, isDragging } = useSortable({ id: id, index })
 
+  const calculateSpan = () => {
+    if (!measureRef.current) return
+
+    const rowHeight = 10
+    const gap = 8
+
+    const contentHeight = measureRef.current.getBoundingClientRect().height
+    const span = Math.ceil((contentHeight + gap) / (rowHeight + gap))
+
+    setRowSpan(span)
+  }
+
   useEffect(() => {
-    const calculateSpan = () => {
-      if (!cardRef.current) return
-
-      const rowHeight = 10
-      const gap = 8
-
-      const contentHeight = cardRef.current.scrollHeight
-      const totalHeight = contentHeight + gap
-
-      const span = Math.ceil(totalHeight / (rowHeight + gap))
-      setRowSpan(span)
-    }
-
-    const id = requestAnimationFrame(calculateSpan)
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateSpan()
-    })
-    if (cardRef.current) resizeObserver.observe(cardRef.current)
-
-    return () => {
-      cancelAnimationFrame(id)
-      resizeObserver.disconnect()
-    }
+    calculateSpan()
   }, [title, content])
 
   const handleOpen = () => {
@@ -84,14 +74,16 @@ export default function Note({ id, title, content, index, onOpen, handleDeleteNo
         isDragging ? 'opacity-0' : ''
       }`}
     >
-      <CardHeader>
-        <CardTitle className="truncate">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="pb-8">
-        <CardDescription className="line-clamp-20 wrap-break-word whitespace-pre-wrap">
-          {content}
-        </CardDescription>
-      </CardContent>
+      <div ref={measureRef}>
+        <CardHeader>
+          <CardTitle className="truncate">{title}</CardTitle>
+        </CardHeader>
+        <CardContent className="pb-8">
+          <CardDescription className="line-clamp-20 wrap-break-word whitespace-pre-wrap">
+            {content}
+          </CardDescription>
+        </CardContent>
+      </div>
 
       <DropdownMenu onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
