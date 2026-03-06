@@ -91,7 +91,7 @@ export default function NoteDialog({
             placeholder="Write something..."
             className="field-sizing-content min-h-0 flex-1 resize-none border-none p-0 shadow-none focus-visible:ring-0"
           />
-          <DialogFooter>
+          <DialogFooter className="flex-row justify-end">
             <DialogDescription className="flex items-center text-xs">
               {openedNote && openedNote.createdAt.toDateString()}
             </DialogDescription>
