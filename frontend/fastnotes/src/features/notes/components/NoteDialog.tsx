@@ -73,7 +73,7 @@ export default function NoteDialog({
       }}
     >
       {(creatingNote || openedNote) && (
-        <DialogContent className="flex h-full max-h-full w-full max-w-full flex-col pr-1 pb-1 sm:h-auto sm:max-h-[90vh] sm:w-[30vw]">
+        <DialogContent className="flex h-full max-h-full w-full max-w-full flex-col pr-1 pb-1 sm:h-auto sm:max-h-[90vh] sm:w-[600px]">
           <DialogHeader>
             <DialogTitle>
               <Input
